@@ -85,7 +85,7 @@ export default function ReservationDetails() {
             <ArrowLeft size={24} />
           </button>
           <div>
-            <h1 className="text-3xl font-heading font-semibold text-text-primary flex items-center gap-3">
+            <h1 className="text-3xl font-heading font-semibold text-text flex items-center gap-3">
               Booking {booking.id}
               <StatusBadge status={booking.status} className="text-sm px-3 py-1" />
             </h1>
@@ -115,33 +115,33 @@ export default function ReservationDetails() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <User size={18} className="text-brand-500" />
+              <User size={18} className="text-primary" />
               Guest Details
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <p className="text-sm text-text-secondary">Full Name</p>
-              <p className="font-medium text-text-primary">{booking.guest.fullName}</p>
+              <p className="font-medium text-text">{booking.guest.fullName}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-text-secondary">Phone</p>
-                <p className="font-medium text-text-primary">{booking.guest.phone}</p>
+                <p className="font-medium text-text">{booking.guest.phone}</p>
               </div>
               <div>
                 <p className="text-sm text-text-secondary">Email</p>
-                <p className="font-medium text-text-primary">{booking.guest.email || 'N/A'}</p>
+                <p className="font-medium text-text">{booking.guest.email || 'N/A'}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-text-secondary">Adults</p>
-                <p className="font-medium text-text-primary">{booking.guest.adults}</p>
+                <p className="font-medium text-text">{booking.guest.adults}</p>
               </div>
               <div>
                 <p className="text-sm text-text-secondary">Children</p>
-                <p className="font-medium text-text-primary">{booking.guest.children}</p>
+                <p className="font-medium text-text">{booking.guest.children}</p>
               </div>
             </div>
           </CardContent>
@@ -150,7 +150,7 @@ export default function ReservationDetails() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Calendar size={18} className="text-brand-500" />
+              <Calendar size={18} className="text-primary" />
               Stay Details
             </CardTitle>
           </CardHeader>
@@ -158,16 +158,16 @@ export default function ReservationDetails() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-text-secondary">Check-in</p>
-                <p className="font-medium text-text-primary">{format(parseISO(booking.stay.checkIn), 'dd MMM yyyy')}</p>
+                <p className="font-medium text-text">{format(parseISO(booking.stay.checkIn), 'dd MMM yyyy')}</p>
               </div>
               <div>
                 <p className="text-sm text-text-secondary">Check-out</p>
-                <p className="font-medium text-text-primary">{format(parseISO(booking.stay.checkOut), 'dd MMM yyyy')}</p>
+                <p className="font-medium text-text">{format(parseISO(booking.stay.checkOut), 'dd MMM yyyy')}</p>
               </div>
             </div>
             <div>
               <p className="text-sm text-text-secondary">Duration</p>
-              <p className="font-medium text-text-primary">{booking.stay.nights} Nights</p>
+              <p className="font-medium text-text">{booking.stay.nights} Nights</p>
             </div>
           </CardContent>
         </Card>
@@ -175,18 +175,18 @@ export default function ReservationDetails() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Bed size={18} className="text-brand-500" />
+              <Bed size={18} className="text-primary" />
               Room Details
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <p className="text-sm text-text-secondary">Room Name</p>
-              <p className="font-medium text-text-primary">{room.name} ({room.nameHi})</p>
+              <p className="font-medium text-text">{room.name} ({room.nameHi})</p>
             </div>
             <div>
               <p className="text-sm text-text-secondary">Category</p>
-              <p className="font-medium text-text-primary">{room.category}</p>
+              <p className="font-medium text-text">{room.category}</p>
             </div>
           </CardContent>
         </Card>
@@ -194,18 +194,18 @@ export default function ReservationDetails() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CreditCard size={18} className="text-brand-500" />
+              <CreditCard size={18} className="text-primary" />
               Pricing Summary
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex justify-between items-center pb-4 border-b border-theme/50">
+            <div className="flex justify-between items-center pb-4 border-b border-border">
               <p className="text-sm text-text-secondary">Rate (Snapshot)</p>
-              <p className="font-medium text-text-primary">₹{booking.roomPriceAtBooking.toLocaleString('en-IN')} / night</p>
+              <p className="font-medium text-text">₹{booking.roomPriceAtBooking.toLocaleString('en-IN')} / night</p>
             </div>
             <div className="flex justify-between items-center">
-              <p className="font-medium text-text-primary">Total Amount</p>
-              <p className="text-2xl font-bold text-brand-600">₹{booking.totalAmount.toLocaleString('en-IN')}</p>
+              <p className="font-medium text-text">Total Amount</p>
+              <p className="text-2xl font-bold text-primary">₹{booking.totalAmount.toLocaleString('en-IN')}</p>
             </div>
           </CardContent>
         </Card>
@@ -214,7 +214,7 @@ export default function ReservationDetails() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Clock size={18} className="text-brand-500" />
+            <Clock size={18} className="text-primary" />
             Booking Metadata
           </CardTitle>
         </CardHeader>
@@ -222,15 +222,15 @@ export default function ReservationDetails() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <p className="text-sm text-text-secondary">Created At</p>
-              <p className="font-medium text-text-primary">{format(parseISO(booking.createdAt), 'dd MMM yyyy, HH:mm')}</p>
+              <p className="font-medium text-text">{format(parseISO(booking.createdAt), 'dd MMM yyyy, HH:mm')}</p>
             </div>
             <div>
               <p className="text-sm text-text-secondary">Source</p>
-              <p className="font-medium text-text-primary">{booking.source}</p>
+              <p className="font-medium text-text">{booking.source}</p>
             </div>
             <div className="col-span-2">
               <p className="text-sm text-text-secondary">Notes</p>
-              <p className="font-medium text-text-primary">{booking.notes || 'None'}</p>
+              <p className="font-medium text-text">{booking.notes || 'None'}</p>
             </div>
           </div>
         </CardContent>

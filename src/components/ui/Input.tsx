@@ -12,19 +12,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           className={cn(
-            "flex h-11 w-full rounded-xl border bg-surface px-4 py-2 text-[14px] font-medium text-primary transition-all duration-200 outline-none",
+            "flex h-10 w-full rounded-input border bg-surface px-4 py-2 text-[14px] font-medium text-text transition-all duration-200 outline-none",
             "file:border-0 file:bg-transparent file:text-sm file:font-medium",
-            "placeholder:text-secondary/50",
+            "placeholder:text-text-muted",
             error
               ? "border-semantic-danger focus:ring-2 focus:ring-semantic-danger/20"
-              : "border-theme focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15",
-            "disabled:cursor-not-allowed disabled:opacity-50",
+              : "border-border focus:border-primary focus:ring-2 focus:ring-primary/20",
+            "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-surface-muted",
             className
           )}
           {...props}
         />
         {error && (
-          <p className="mt-1 text-sm text-semantic-danger animate-fade-in">{error}</p>
+          <p className="mt-1 text-xs text-semantic-danger font-medium animate-fade-in">{error}</p>
         )}
       </div>
     );

@@ -12,16 +12,16 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  let variant: 'success' | 'warning' | 'danger' | 'info' | 'default' | 'brand' | 'teal' | 'plum' | 'coral' = 'default';
+  let variant: 'success' | 'warning' | 'danger' | 'info' | 'default' | 'primary' = 'default';
 
   switch (status) {
     case 'Available':
     case 'Confirmed':
-      variant = 'teal';
+      variant = 'success';
       break;
     case 'Occupied':
     case 'Checked In':
-      variant = 'brand';
+      variant = 'primary';
       break;
     case 'Pending':
     case 'Reserved':
@@ -30,7 +30,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       break;
     case 'Maintenance':
     case 'Cancelled':
-      variant = 'coral';
+      variant = 'danger';
       break;
   }
 

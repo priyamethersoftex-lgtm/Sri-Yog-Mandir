@@ -12,17 +12,17 @@ interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement | HT
 export const FormField = React.forwardRef<any, FormFieldProps>(
   ({ label, error, className, as = 'input', options, children, ...props }, ref) => {
     const inputClass = cn(
-      "w-full bg-surface border rounded-xl px-4 py-2.5 text-[14px] text-primary transition-all duration-200 focus:outline-none focus:ring-4 font-medium",
+      "w-full bg-surface border rounded-input px-4 h-10 text-[14px] text-text transition-all duration-200 focus:outline-none focus:ring-2 font-medium",
       error 
         ? "border-semantic-danger focus:ring-semantic-danger/20" 
-        : "border-theme focus:border-brand-500 focus:ring-brand-500/15",
-      "disabled:cursor-not-allowed disabled:opacity-50",
+        : "border-border focus:border-primary focus:ring-primary/20",
+      "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-surface-muted",
       className
     );
 
     return (
       <div className="space-y-1.5">
-        <label className="block text-[13px] font-semibold text-secondary">
+        <label className="block text-[13px] font-semibold text-text-secondary">
           {label}
         </label>
         

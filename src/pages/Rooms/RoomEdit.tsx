@@ -100,7 +100,7 @@ export default function RoomEdit() {
         { label: room.name }
       ]}
       action={
-        <Button variant="outline" onClick={() => navigate('/rooms')} className="gap-2 border-theme hover:bg-muted">
+        <Button variant="outline" onClick={() => navigate('/rooms')} className="gap-2 border-border hover:bg-surface-muted">
           <ArrowLeft size={16} /> Back to Rooms
         </Button>
       }
@@ -110,27 +110,27 @@ export default function RoomEdit() {
           <form onSubmit={handleSave} className="space-y-6">
             
             {/* Locked Identity Section */}
-            <Card className="border-l-4 border-l-brand-500 bg-muted/10">
-              <CardHeader className="py-4 border-b border-theme/30 flex flex-row items-center justify-between">
-                <CardTitle className="text-[16px] text-brand-600 flex items-center gap-2">
+            <Card className="border-l-4 border-l-primary bg-surface-muted/30">
+              <CardHeader className="py-4 border-b border-border flex flex-row items-center justify-between">
+                <CardTitle className="text-[16px] text-primary flex items-center gap-2">
                   <Lock size={16} /> Room Identity (Locked)
                 </CardTitle>
-                <span className="text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-1 bg-surface rounded-full border border-theme">Read-Only</span>
+                <span className="text-[11px] font-bold text-text-secondary uppercase tracking-wider px-2 py-1 bg-surface rounded-full border border-border">Read-Only</span>
               </CardHeader>
               <CardContent className="pt-4 grid grid-cols-2 gap-6">
                 <div>
-                  <p className="text-[12px] text-secondary font-medium">Room ID</p>
-                  <p className="font-bold text-primary text-[15px]">{room.id}</p>
+                  <p className="text-[12px] text-text-secondary font-medium">Room ID</p>
+                  <p className="font-bold text-text text-[15px]">{room.id}</p>
                 </div>
                 <div>
-                  <p className="text-[12px] text-secondary font-medium">Room Name</p>
-                  <p className="font-bold text-primary text-[15px]">{room.name}</p>
+                  <p className="text-[12px] text-text-secondary font-medium">Room Name</p>
+                  <p className="font-bold text-text text-[15px]">{room.name}</p>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="py-5 bg-muted/20 border-b border-theme/50">
+              <CardHeader className="py-5 bg-surface-muted/50 border-b border-border">
                 <CardTitle>Basic Information</CardTitle>
               </CardHeader>
               <CardContent className="pt-6 space-y-5">
@@ -149,7 +149,7 @@ export default function RoomEdit() {
                   />
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-4 rounded-xl border border-brand-500/20 bg-brand-500/5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 p-4 rounded-xl border border-primary/20 bg-primary/5">
                   <FormField label="Price per Night (₹)" name="pricePerNight" type="number" defaultValue={room.pricePerNight} />
                   <FormField label="Original Price (₹) - For Strikethrough" name="originalPrice" type="number" defaultValue={room.originalPrice} />
                 </div>
@@ -169,7 +169,7 @@ export default function RoomEdit() {
             </Card>
 
             <Card>
-              <CardHeader className="py-5 bg-muted/20 border-b border-theme/50">
+              <CardHeader className="py-5 bg-surface-muted/50 border-b border-border">
                 <CardTitle>Descriptions</CardTitle>
               </CardHeader>
               <CardContent className="pt-6 space-y-5">
@@ -181,16 +181,16 @@ export default function RoomEdit() {
 
             <div className="flex justify-end gap-3 pt-2">
               <Button type="button" variant="ghost" onClick={() => navigate('/rooms')}>Discard Changes</Button>
-              <Button type="submit" isLoading={isSaving} className="shadow-brand">Save Room Changes</Button>
+              <Button type="submit" isLoading={isSaving}>Save Room Changes</Button>
             </div>
           </form>
         </div>
 
         <div className="lg:col-span-1 space-y-6">
           <Card className={room.isMaintenance ? "border-semantic-danger ring-1 ring-semantic-danger/30" : ""}>
-            <CardHeader className="bg-muted/20 border-b border-theme/50 py-4">
+            <CardHeader className="bg-surface-muted/50 border-b border-border py-4">
               <CardTitle className="flex items-center gap-2 text-[15px]">
-                <AlertTriangle size={18} className={room.isMaintenance ? "text-semantic-danger" : "text-brand-500"} />
+                <AlertTriangle size={18} className={room.isMaintenance ? "text-semantic-danger" : "text-primary"} />
                 Operational Status
               </CardTitle>
             </CardHeader>
@@ -200,10 +200,10 @@ export default function RoomEdit() {
               </div>
               
               <div className="space-y-1 text-center">
-                <h3 className="font-bold text-[17px] text-primary">
+                <h3 className="font-bold text-[17px] text-text">
                   {room.isMaintenance ? "Under Maintenance" : "Room is Active"}
                 </h3>
-                <p className="text-[13px] text-secondary leading-relaxed">
+                <p className="text-[13px] text-text-secondary leading-relaxed">
                   {room.isMaintenance 
                     ? "This room is blocked from accepting any new bookings." 
                     : "Room is open for reservations."}

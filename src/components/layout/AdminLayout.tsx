@@ -16,7 +16,7 @@ export default function AdminLayout() {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--bg-app)] text-[var(--text-primary)] transition-colors duration-300">
+    <div className="flex h-screen overflow-hidden bg-background text-text transition-colors duration-300">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((o) => !o)} />
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">

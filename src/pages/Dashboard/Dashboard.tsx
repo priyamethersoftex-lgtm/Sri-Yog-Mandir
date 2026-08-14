@@ -1,30 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { dashboardService, DashboardStats } from '../../services/dashboardService';
-import { roomService } from '../../services/roomService';
-import { reservationService } from '../../services/reservationService';
-import { Room, Booking } from '../../types';
 import { LoadingState } from '../../components/data/LoadingState';
-import { Calendar as CalendarIcon, CheckCircle, Clock, Users, ArrowDownToLine, ArrowUpFromLine, Calendar, BedDouble, Wrench, Activity } from 'lucide-react';
-import { format, isToday, parseISO } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { PageContainer } from '../../components/ui/PageContainer';
+import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { BedDouble, ArrowDownToLine, CalendarDays, CheckCircle, Clock, AlertCircle, Calendar } from 'lucide-react';
+import { format } from 'date-fns';
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const [statsData, roomsData, bookingsData] = await Promise.all([
-          dashboardService.getStats(),
-          roomService.getRooms(),
-          reservationService.getBookings()
-        ]);
+        const statsData = await dashboardService.getStats();
         setStats(statsData);
-        setRooms(roomsData);
-        setBookings(bookingsData);
       } catch (error) {
         console.error('Failed to load dashboard data', error);
       } finally {
@@ -36,139 +27,130 @@ export default function Dashboard() {
 
   if (isLoading || !stats) return <LoadingState />;
 
-  const statCards = [
-    { 
-      title: 'AVAILABLE TODAY', 
-      value: stats.availableToday, 
-      subtext: 'Ready for check-in',
-      dot: 'bg-emerald-500',
-      icon: CheckCircle
-    },
-    { 
-      title: 'OCCUPIED TODAY', 
-      value: stats.occupiedToday, 
-      subtext: 'Guests checked in',
-      dot: 'bg-brand-500',
-      icon: BedDouble
-    },
-    { 
-      title: "TODAY'S ARRIVALS", 
-      value: stats.arrivalsToday, 
-      subtext: 'Expected today',
-      dot: 'bg-blue-500',
-      icon: ArrowDownToLine
-    },
-    { 
-      title: "TODAY'S DEPARTURES", 
-      value: stats.departuresToday, 
-      subtext: 'Leaving today',
-      dot: 'bg-orange-500',
-      icon: ArrowUpFromLine
-    },
-  ];
-
   return (
-    <div className="space-y-6 pb-10 animate-fade-in max-w-7xl mx-auto px-1 sm:px-2">
-      
-      {/* Top Header Card */}
-      <div className="bg-white dark:bg-card border border-border-default rounded-[14px] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-card">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 flex items-center justify-center">
-            <Activity size={24} strokeWidth={2} />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-primary">Daily Dashboard</h1>
-            <p className="text-[13px] text-secondary font-medium">Real-time performance audit</p>
-          </div>
-        </div>
-        
+    <PageContainer
+      title="Daily Overview"
+      description="Real-time operational status for Banaras Yog Mandir"
+      action={
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-border-default hover:bg-muted rounded-lg text-sm font-semibold text-secondary transition-colors">
-            <CalendarIcon size={16} />
-            {format(new Date(), 'MM/dd/yyyy')}
-          </button>
-          <button className="bg-semantic-success hover:bg-emerald-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-colors">
-            SYNC DATA
-          </button>
+          <div className="flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded-lg text-sm font-semibold text-text-secondary">
+            <Calendar size={16} />
+            {format(new Date(), 'MMMM d, yyyy')}
+          </div>
+          <Button variant="primary">Sync PMS</Button>
         </div>
-      </div>
-
-      {/* KPI Primary Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {statCards.map((stat, i) => (
-          <div key={i} className="bg-white dark:bg-card border border-border-default rounded-[14px] p-5 relative overflow-hidden shadow-card group hover:border-brand-500/30 transition-colors">
-            <div className="relative z-10">
-              <p className="text-[11px] font-bold text-secondary uppercase tracking-wider mb-2">
-                {stat.title}
-              </p>
-              <p className="text-[32px] font-extrabold text-primary leading-tight tracking-tight mb-3">
-                {stat.value}
-              </p>
-              <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${stat.dot}`}></span>
-                <span className="text-[12px] font-semibold text-secondary">
-                  {stat.subtext}
-                </span>
+      }
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Column 1: Room Status */}
+        <Card className="flex flex-col">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                <BedDouble size={20} />
+              </div>
+              <CardTitle>Room Status</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-surface-muted p-4 rounded-xl border border-border">
+                <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">Available</p>
+                <p className="text-3xl font-extrabold text-semantic-success">{stats.availableToday}</p>
+              </div>
+              <div className="bg-surface-muted p-4 rounded-xl border border-border">
+                <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">Occupied</p>
+                <p className="text-3xl font-extrabold text-primary">{stats.occupiedToday}</p>
               </div>
             </div>
+            <div className="bg-surface-muted p-4 rounded-xl border border-border mt-auto">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">Maintenance</p>
+                  <p className="text-xl font-bold text-semantic-danger">{stats.maintenanceToday}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">Total Rooms</p>
+                  <p className="text-xl font-bold text-text">{stats.totalRooms}</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Column 2: Movements */}
+        <Card className="flex flex-col">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-lg bg-semantic-info/10 text-semantic-info">
+                <ArrowDownToLine size={20} />
+              </div>
+              <CardTitle>Today's Movements</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col gap-4">
+            <div className="bg-surface-muted p-5 rounded-xl border border-border flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">Arrivals</p>
+                <p className="text-sm text-text-muted">Expected to check-in</p>
+              </div>
+              <p className="text-3xl font-extrabold text-semantic-info">{stats.arrivalsToday}</p>
+            </div>
             
-            {/* Background Icon Watermark */}
-            <div className="absolute right-0 bottom-0 p-4 opacity-[0.03] transform translate-x-4 translate-y-4 group-hover:scale-110 transition-transform duration-500">
-              <stat.icon size={100} strokeWidth={1.5} />
+            <div className="bg-surface-muted p-5 rounded-xl border border-border flex items-center justify-between mt-auto">
+              <div>
+                <p className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-1">Departures</p>
+                <p className="text-sm text-text-muted">Expected to check-out</p>
+              </div>
+              <p className="text-3xl font-extrabold text-semantic-warning">{stats.departuresToday}</p>
             </div>
-          </div>
-        ))}
-      </div>
+          </CardContent>
+        </Card>
 
-      {/* Verification / Secondary Block */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        
-        <div className="lg:col-span-2 bg-white border border-border-default rounded-[14px] p-6 shadow-card">
-           <div className="flex items-center gap-3 mb-6">
-             <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center">
-               <Clock size={16} strokeWidth={2.5} />
-             </div>
-             <div>
-               <h2 className="text-[15px] font-bold text-primary uppercase tracking-wide">Hourly Velocity</h2>
-               <p className="text-[12px] text-secondary">Revenue & order trends throughout the day</p>
-             </div>
-           </div>
-           
-           <div className="h-64 flex items-center justify-center border-t border-dashed border-border-default/60">
-             <p className="text-secondary/50 font-medium text-sm">Chart visualization area</p>
-           </div>
-        </div>
-
-        <div className="bg-white border border-border-default rounded-[14px] p-6 shadow-card flex flex-col">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center">
-              <Users size={16} strokeWidth={2.5} />
+        {/* Column 3: Reservations */}
+        <Card className="flex flex-col">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-lg bg-semantic-warning/10 text-semantic-warning">
+                <CalendarDays size={20} />
+              </div>
+              <CardTitle>Reservations Overview</CardTitle>
             </div>
-            <div>
-              <h2 className="text-[15px] font-bold text-primary uppercase tracking-wide">Today's Status</h2>
-              <p className="text-[12px] text-secondary">Check-ins & Pending</p>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col gap-3">
+            <div className="flex items-center justify-between p-3 border-b border-border">
+              <div className="flex items-center gap-2">
+                <AlertCircle size={16} className="text-semantic-warning" />
+                <span className="text-sm font-semibold text-text">Pending Approval</span>
+              </div>
+              <span className="font-bold text-semantic-warning">{stats.pendingReservations}</span>
             </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-4">
-              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-wider mb-1">Checked In</p>
-              <p className="text-2xl font-extrabold text-blue-700">{stats.checkedInGuests}</p>
+            
+            <div className="flex items-center justify-between p-3 border-b border-border">
+              <div className="flex items-center gap-2">
+                <CheckCircle size={16} className="text-semantic-success" />
+                <span className="text-sm font-semibold text-text">Confirmed</span>
+              </div>
+              <span className="font-bold text-text">{stats.confirmedReservations}</span>
             </div>
-            <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4">
-              <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Confirmed</p>
-              <p className="text-2xl font-extrabold text-emerald-700">{stats.confirmedReservations}</p>
+            
+            <div className="flex items-center justify-between p-3">
+              <div className="flex items-center gap-2">
+                <Clock size={16} className="text-primary" />
+                <span className="text-sm font-semibold text-text">Checked In Guests</span>
+              </div>
+              <span className="font-bold text-text">{stats.checkedInGuests}</span>
             </div>
-          </div>
-          
-          <div className="mt-auto">
-            <button className="w-full py-3 bg-muted hover:bg-border-default text-primary font-bold text-[13px] rounded-xl transition-colors">
-              MANAGE RESERVATIONS
-            </button>
-          </div>
-        </div>
+            
+            <div className="mt-auto pt-4">
+              <Button variant="outline" className="w-full">
+                View All Reservations
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-      
-    </div>
+    </PageContainer>
   );
 }

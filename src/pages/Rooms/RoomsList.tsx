@@ -58,10 +58,10 @@ export default function RoomsList() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Available': return 'teal';
-      case 'Occupied': return 'brand';
+      case 'Available': return 'success';
+      case 'Occupied': return 'primary';
       case 'Reserved': return 'warning';
-      case 'Maintenance': return 'coral';
+      case 'Maintenance': return 'danger';
       default: return 'default';
     }
   };
@@ -79,9 +79,9 @@ export default function RoomsList() {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {rooms.map((room) => (
-          <Card key={room.id} className="overflow-hidden flex flex-col group hover:border-brand-500 hover:shadow-xl transition-all duration-300">
+          <Card key={room.id} className="overflow-hidden flex flex-col group hover:border-primary hover:shadow-xl transition-all duration-300">
             {/* Image Header Area */}
-            <div className="relative h-48 w-full bg-muted/50 overflow-hidden shrink-0">
+            <div className="relative h-48 w-full bg-surface-muted overflow-hidden shrink-0">
               {room.mainImage ? (
                 <img 
                   src={room.mainImage} 
@@ -89,13 +89,13 @@ export default function RoomsList() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-secondary/30">
+                <div className="w-full h-full flex items-center justify-center text-text-secondary/30">
                   <BedDouble size={48} />
                 </div>
               )}
               
               <div className="absolute top-4 right-4">
-                <Badge variant={getStatusColor(room.currentStatus) as any} className="shadow-lg backdrop-blur-sm bg-white/90">
+                <Badge variant={getStatusColor(room.currentStatus) as any} className="shadow-lg backdrop-blur-sm bg-surface/90">
                   {room.currentStatus}
                 </Badge>
               </div>
@@ -110,34 +110,34 @@ export default function RoomsList() {
             <CardContent className="p-5 flex-1 flex flex-col">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-xl font-heading font-bold text-primary">{room.name}</h3>
-                  <p className="text-[13px] text-secondary font-medium mt-1">{room.category}</p>
+                  <h3 className="text-xl font-sans font-bold text-text">{room.name}</h3>
+                  <p className="text-[13px] text-text-secondary font-medium mt-1">{room.category}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-brand-600">₹{room.pricePerNight.toLocaleString('en-IN')}</p>
-                  <p className="text-[11px] text-secondary uppercase tracking-wider">Per Night</p>
+                  <p className="text-lg font-bold text-primary">₹{room.pricePerNight.toLocaleString('en-IN')}</p>
+                  <p className="text-[11px] text-text-secondary uppercase tracking-wider">Per Night</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 py-4 border-y border-theme/60 mt-auto mb-4">
+              <div className="grid grid-cols-2 gap-4 py-4 border-y border-border mt-auto mb-4">
                 <div>
-                  <p className="text-[11px] text-secondary uppercase tracking-wider mb-1">Capacity</p>
-                  <p className="text-[13px] font-medium text-primary flex items-center gap-1.5">
-                    <Users size={14} className="text-brand-500" />
+                  <p className="text-[11px] text-text-secondary uppercase tracking-wider mb-1">Capacity</p>
+                  <p className="text-[13px] font-medium text-text flex items-center gap-1.5">
+                    <Users size={14} className="text-primary" />
                     {room.capacity.adults} Adults, {room.capacity.children} Child
                   </p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-secondary uppercase tracking-wider mb-1">Current Guest</p>
-                  <p className="text-[13px] font-medium text-primary truncate">
-                    {room.guestName ? room.guestName : <span className="text-secondary/50">None</span>}
+                  <p className="text-[11px] text-text-secondary uppercase tracking-wider mb-1">Current Guest</p>
+                  <p className="text-[13px] font-medium text-text truncate">
+                    {room.guestName ? room.guestName : <span className="text-text-secondary/50">None</span>}
                   </p>
                 </div>
               </div>
 
               <Button 
                 variant="outline" 
-                className="w-full gap-2 border-theme hover:bg-brand-50 hover:text-brand-600 hover:border-brand-500 transition-colors"
+                className="w-full gap-2 border-border hover:bg-primary/10 hover:text-primary hover:border-primary transition-colors"
                 onClick={() => navigate(`/rooms/${room.id}/edit`)}
               >
                 <Edit size={16} /> Edit Room

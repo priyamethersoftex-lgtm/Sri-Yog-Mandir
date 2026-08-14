@@ -50,8 +50,8 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
     <header 
       className="h-[60px] flex-shrink-0 flex items-center gap-2 sm:gap-4 px-3 sm:px-5 sticky top-0 z-30"
       style={{
-        backgroundColor: 'var(--bg-header)',
-        borderBottom: '1px solid var(--border-default)',
+        backgroundColor: 'var(--color-surface)',
+        borderBottom: '1px solid var(--color-border)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)'
       }}
@@ -61,7 +61,7 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
           <button
             onClick={onToggle}
             className="hidden lg:flex w-8 h-8 rounded-xl items-center justify-center cursor-pointer transition-all duration-200 hover:bg-black/5 dark:hover:bg-white/5 flex-shrink-0"
-            style={{ color: 'var(--text-secondary)' }}
+            style={{ color: 'var(--color-text-secondary)' }}
             title={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
           >
             {isOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
@@ -71,7 +71,7 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
         <button
           onClick={onMenuClick}
           className="lg:hidden p-2 -ml-1 sm:-ml-2 rounded-xl transition-colors cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 flex-shrink-0"
-          style={{ color: 'var(--text-secondary)' }}
+          style={{ color: 'var(--color-text-secondary)' }}
           aria-label="Toggle menu"
         >
           <Menu size={19} />
@@ -79,20 +79,20 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
 
         <div 
           className="flex-col justify-center flex-1 min-w-0 pl-2 sm:pl-3"
-          style={{ borderLeft: '1px solid var(--border-default)' }}
+          style={{ borderLeft: '1px solid var(--color-border)' }}
         >
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] overflow-hidden" style={{ color: 'var(--text-muted)' }}>
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] overflow-hidden" style={{ color: 'var(--color-text-muted)' }}>
             <span className="truncate flex-shrink-0">{section}</span>
             {section !== page && (
               <>
                 <span className="opacity-40 flex-shrink-0">/</span>
-                <span className="truncate" style={{ color: 'var(--text-secondary)' }}>{page}</span>
+                <span className="truncate" style={{ color: 'var(--color-text-secondary)' }}>{page}</span>
               </>
             )}
           </div>
           <h1 
             className="text-sm font-bold truncate leading-tight sm:mt-0.5"
-            style={{ color: 'var(--text-primary)' }}
+            style={{ color: 'var(--color-text)' }}
           >
             {page}
           </h1>
@@ -107,8 +107,8 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
           title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
           className="relative flex items-center w-10 h-5 rounded-full p-0.5 transition-all duration-300 cursor-pointer mx-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           style={{
-            backgroundColor: theme === 'dark' ? '#1fab9d' : '#e2e8f2',
-            border: `1px solid ${theme === 'dark' ? '#1fab9d' : 'var(--border-strong)'}`
+            backgroundColor: theme === 'dark' ? 'var(--color-primary)' : 'var(--color-surface-muted)',
+            border: `1px solid ${theme === 'dark' ? 'var(--color-primary)' : 'var(--color-border-strong)'}`
           }}
         >
           <Sun
@@ -138,16 +138,16 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
 
         <div 
           className="hidden sm:flex items-center gap-2 pl-3 ml-1.5"
-          style={{ borderLeft: '1px solid var(--border-default)' }}
+          style={{ borderLeft: '1px solid var(--color-border)' }}
         >
-          <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-brand-500">
+          <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-primary">
              <Hotel size={14} className="text-white" />
           </div>
           <div className="hidden md:block">
-            <p className="text-sm font-bold leading-none" style={{ color: 'var(--text-primary)' }}>
+            <p className="text-sm font-bold leading-none" style={{ color: 'var(--color-text)' }}>
               Banaras Yog Mandir
             </p>
-            <p className="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
               Admin Portal
             </p>
           </div>

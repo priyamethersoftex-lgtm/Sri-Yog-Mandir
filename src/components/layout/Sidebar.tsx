@@ -98,12 +98,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         >
           <Link to="/" className="flex items-center justify-center w-full h-full cursor-pointer hover:opacity-80 transition-opacity">
             {!isExpanded ? (
-              <div className="w-8 h-8 rounded-full bg-brand-500/10 text-brand-600 flex items-center justify-center font-bold text-sm shrink-0">
+              <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
                 BY
               </div>
             ) : (
               <div className="animate-fade-in overflow-hidden flex items-center gap-2 h-full w-full py-2">
-                 <div className="w-8 h-8 rounded-full bg-brand-500/10 text-brand-600 flex items-center justify-center font-bold text-sm shrink-0">
+                 <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
                   BY
                  </div>
                  <div className="flex flex-col">

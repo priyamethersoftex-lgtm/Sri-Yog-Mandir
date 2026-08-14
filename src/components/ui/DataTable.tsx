@@ -28,8 +28,7 @@ interface DataTableProps<T> {
 function TH({ children, className = '' }: { children: React.ReactNode, className?: string }) {
   return (
     <th 
-      className={`py-3.5 px-4 text-[10.5px] font-extrabold uppercase tracking-[0.1em] whitespace-nowrap ${className}`} 
-      style={{ color: 'var(--text-secondary)' }}
+      className={`py-4 px-4 text-[12px] font-extrabold uppercase tracking-widest whitespace-nowrap text-brand-dark ${className}`} 
     >
       {children}
     </th>
@@ -42,11 +41,12 @@ function PgBtn({ children, active, disabled, onClick }: { children: React.ReactN
     <button
       onClick={onClick}
       disabled={disabled}
-      className="w-9 h-9 flex items-center justify-center rounded-xl text-[13px] font-bold border transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
-      style={active
-        ? { background: 'linear-gradient(135deg,#1fab9d,#61c09a)', color: '#fff', borderColor: 'transparent', boxShadow: '0 4px 12px rgba(31,171,157,.35)' }
-        : { borderColor: 'var(--border-default)', backgroundColor: 'var(--bg-muted)', color: 'var(--text-primary)' }
-      }
+      className={cn(
+        "w-8 h-8 flex items-center justify-center rounded-full text-[13px] font-bold transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:bg-surface-muted active:scale-95",
+        active 
+          ? "bg-primary text-white shadow-sm"
+          : "bg-transparent border border-border text-text-secondary hover:text-text"
+      )}
     >
       {children}
     </button>
@@ -79,13 +79,12 @@ export function DataTable<T>({
 
   return (
     <div 
-      className={cn("rounded-2xl overflow-hidden", className)} 
-      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-card)', boxShadow: 'var(--shadow-sm)' }}
+      className={cn("rounded-card overflow-hidden bg-surface border border-border shadow-card", className)} 
     >
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse" style={{ fontVariantNumeric: 'tabular-nums' }}>
           <thead>
-            <tr style={{ backgroundColor: 'var(--bg-muted)', borderBottom: '2px solid var(--border-default)' }}>
+            <tr className="bg-surface border-b border-border">
               {columns.map((col, idx) => (
                 <TH key={idx} className={col.className}>
                   {col.header}
@@ -96,7 +95,7 @@ export function DataTable<T>({
           <tbody>
             {loading ? (
               Array.from({ length: Math.min(pageSize, 5) }).map((_, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid var(--border-default)' }}>
+                <tr key={i} className="border-b border-border">
                   {columns.map((_, j) => (
                     <td key={j} className="py-4 px-4">
                       <div className="skeleton h-3.5 rounded w-3/4" />
@@ -109,32 +108,26 @@ export function DataTable<T>({
                 <td colSpan={columns.length} className="py-20 text-center">
                   <div className="flex flex-col items-center gap-3">
                     <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center" 
-                      style={{ backgroundColor: 'var(--bg-muted)', border: '1px dashed var(--border-default)' }}
+                      className="w-16 h-16 rounded-full flex items-center justify-center bg-surface-muted border border-dashed border-border" 
                     >
-                      <AlertCircle size={24} style={{ color: 'var(--text-muted)' }} />
+                      <AlertCircle size={24} className="text-text-muted" />
                     </div>
-                    <p className="text-[15px] font-bold" style={{ color: 'var(--text-primary)' }}>No Data Found</p>
-                    <p className="text-[12.5px]" style={{ color: 'var(--text-muted)' }}>{emptyState || "Try adjusting your filters"}</p>
+                    <p className="text-[15px] font-semibold text-text">No Data Found</p>
+                    <p className="text-[13px] text-text-muted">{emptyState || "Try adjusting your filters"}</p>
                   </div>
                 </td>
               </tr>
             ) : (
               data.map((item, i) => {
-                const isOdd = i % 2 === 1;
                 return (
                   <tr
                     key={keyExtractor(item)}
-                    style={{ 
-                      borderBottom: '1px solid var(--border-default)', 
-                      backgroundColor: isOdd ? 'var(--bg-muted)' : 'transparent',
-                      transition: 'background-color 0.15s ease'
-                    }}
-                    onMouseEnter={el => el.currentTarget.style.backgroundColor = 'rgba(31,171,157,0.04)'}
-                    onMouseLeave={el => el.currentTarget.style.backgroundColor = isOdd ? 'var(--bg-muted)' : 'transparent'}
+                    className={cn(
+                      "border-b border-border transition-colors hover:bg-surface-muted/30 bg-surface"
+                    )}
                   >
                     {columns.map((col, idx) => (
-                      <td key={idx} className={cn("py-3 px-4", col.className)}>
+                      <td key={idx} className={cn("py-4 px-4 text-[13.5px] font-medium text-text", col.className)}>
                         {col.cell
                           ? col.cell(item)
                           : col.accessorKey
@@ -152,12 +145,12 @@ export function DataTable<T>({
 
       {/* ── Pagination ── */}
       {totalRecords > 0 && onPageChange && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4" style={{ borderTop: '1px solid var(--border-default)' }}>
-          <p className="text-[13px]" style={{ color: 'var(--text-muted)' }}>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 border-t border-border">
+          <p className="text-[13px] text-text-muted">
             Showing{' '}
-            <span className="font-bold" style={{ color: 'var(--text-primary)' }}>{firstEntry}</span>–
-            <span className="font-bold" style={{ color: 'var(--text-primary)' }}>{lastEntry}</span> of{' '}
-            <span className="font-bold" style={{ color: 'var(--text-primary)' }}>{totalRecords}</span> entries
+            <span className="font-bold text-text">{firstEntry}</span>–
+            <span className="font-bold text-text">{lastEntry}</span> of{' '}
+            <span className="font-bold text-text">{totalRecords}</span> records
             <span className="ml-2 opacity-50">· Page {page} of {totalPages}</span>
           </p>
           <div className="flex items-center gap-1.5">

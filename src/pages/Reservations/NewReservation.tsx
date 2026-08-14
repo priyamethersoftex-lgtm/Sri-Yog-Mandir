@@ -159,9 +159,9 @@ export default function NewReservation() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <Card>
-              <CardHeader className="py-5 px-6 border-b border-theme/50 bg-muted/20">
+              <CardHeader className="py-5 px-6 border-b border-border bg-surface-muted/50">
                 <CardTitle className="flex items-center gap-2">
-                  <User size={18} className="text-brand-500" />
+                  <User size={18} className="text-primary" />
                   Guest Information
                 </CardTitle>
               </CardHeader>
@@ -179,9 +179,9 @@ export default function NewReservation() {
             </Card>
 
             <Card>
-              <CardHeader className="py-5 px-6 border-b border-theme/50 bg-muted/20">
+              <CardHeader className="py-5 px-6 border-b border-border bg-surface-muted/50">
                 <CardTitle className="flex items-center gap-2">
-                  <CalendarDays size={18} className="text-brand-500" />
+                  <CalendarDays size={18} className="text-primary" />
                   Stay Details
                 </CardTitle>
               </CardHeader>
@@ -202,20 +202,20 @@ export default function NewReservation() {
             </Card>
 
             <Card>
-              <CardHeader className="py-5 px-6 border-b border-theme/50 bg-muted/20">
+              <CardHeader className="py-5 px-6 border-b border-border bg-surface-muted/50">
                 <CardTitle className="flex items-center gap-2">
-                  <BedDouble size={18} className="text-brand-500" />
+                  <BedDouble size={18} className="text-primary" />
                   Room Selection
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <div className="space-y-4">
                   {isCheckingAvailability ? (
-                    <div className="h-40 flex items-center justify-center text-brand-500 bg-muted/30 rounded-xl animate-pulse">
+                    <div className="h-40 flex items-center justify-center text-primary bg-surface-muted/50 rounded-xl animate-pulse">
                       Checking availability...
                     </div>
                   ) : rooms.length === 0 ? (
-                    <div className="h-40 flex items-center justify-center text-secondary bg-muted/30 rounded-xl">
+                    <div className="h-40 flex items-center justify-center text-text-secondary bg-surface-muted/50 rounded-xl">
                       No rooms loaded.
                     </div>
                   ) : (
@@ -229,18 +229,18 @@ export default function NewReservation() {
                             onClick={() => isAvail && setValue('roomId', room.id, { shouldValidate: true })}
                             className={cn(
                               "border rounded-xl p-4 transition-all duration-200 relative overflow-hidden",
-                              isAvail ? "cursor-pointer hover:border-brand-500" : "opacity-50 cursor-not-allowed bg-muted/50 grayscale",
-                              isSelected ? "border-brand-500 bg-brand-500/5 ring-1 ring-brand-500" : "border-theme bg-surface"
+                              isAvail ? "cursor-pointer hover:border-primary" : "opacity-50 cursor-not-allowed bg-surface-muted grayscale",
+                              isSelected ? "border-primary bg-primary/5 ring-1 ring-primary" : "border-border bg-surface"
                             )}
                           >
                             <div className="flex justify-between items-start mb-2">
                               <div>
-                                <h4 className="font-bold text-primary">{room.name}</h4>
-                                <p className="text-[12px] font-medium text-secondary">{room.category}</p>
+                                <h4 className="font-bold text-text">{room.name}</h4>
+                                <p className="text-[12px] font-medium text-text-secondary">{room.category}</p>
                               </div>
                               <div className="text-right">
-                                <p className="font-bold text-brand-600">₹{room.pricePerNight}</p>
-                                <p className="text-[10px] text-secondary">/ night</p>
+                                <p className="font-bold text-primary">₹{room.pricePerNight}</p>
+                                <p className="text-[10px] text-text-secondary">/ night</p>
                               </div>
                             </div>
                             {!isAvail && (
@@ -251,7 +251,7 @@ export default function NewReservation() {
                               </div>
                             )}
                             {isSelected && (
-                              <div className="absolute top-0 right-0 w-8 h-8 bg-brand-500 text-white flex items-center justify-center rounded-bl-xl">
+                              <div className="absolute top-0 right-0 w-8 h-8 bg-primary text-white flex items-center justify-center rounded-bl-xl">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                               </div>
                             )}
@@ -266,9 +266,9 @@ export default function NewReservation() {
             </Card>
 
             <Card>
-              <CardHeader className="py-5 px-6 border-b border-theme/50 bg-muted/20">
+              <CardHeader className="py-5 px-6 border-b border-border bg-surface-muted/50">
                 <CardTitle className="flex items-center gap-2">
-                  <FileText size={18} className="text-brand-500" />
+                  <FileText size={18} className="text-primary" />
                   Additional Notes
                 </CardTitle>
               </CardHeader>
@@ -280,34 +280,34 @@ export default function NewReservation() {
 
           <div className="lg:col-span-1">
             <div className="sticky top-[100px]">
-              <Card className="border-brand-500/30 shadow-xl shadow-brand-500/5 bg-gradient-to-b from-surface to-muted/10">
-                <CardHeader className="py-5 px-6 border-b border-theme/50">
+              <Card className="border-primary/30 shadow-xl shadow-primary/5 bg-gradient-to-b from-surface to-surface-muted/30">
+                <CardHeader className="py-5 px-6 border-b border-border">
                   <CardTitle>Booking Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   <div className="space-y-3">
                     <div className="flex justify-between text-[14px]">
-                      <span className="text-secondary font-medium">Dates</span>
-                      <span className="font-bold text-primary">{nights > 0 ? `${nights} nights` : '-'}</span>
+                      <span className="text-text-secondary font-medium">Dates</span>
+                      <span className="font-bold text-text">{nights > 0 ? `${nights} nights` : '-'}</span>
                     </div>
                     <div className="flex justify-between text-[14px]">
-                      <span className="text-secondary font-medium">Room</span>
-                      <span className="font-bold text-primary">{selectedRoom?.name || 'Not selected'}</span>
+                      <span className="text-text-secondary font-medium">Room</span>
+                      <span className="font-bold text-text">{selectedRoom?.name || 'Not selected'}</span>
                     </div>
                     {selectedRoom && (
                       <div className="flex justify-between text-[14px]">
-                        <span className="text-secondary font-medium">Rate per night</span>
-                        <span className="font-bold text-primary">₹{selectedRoom.pricePerNight.toLocaleString('en-IN')}</span>
+                        <span className="text-text-secondary font-medium">Rate per night</span>
+                        <span className="font-bold text-text">₹{selectedRoom.pricePerNight.toLocaleString('en-IN')}</span>
                       </div>
                     )}
                   </div>
                   
-                  <div className="pt-4 border-t border-theme/60 flex items-end justify-between">
+                  <div className="pt-4 border-t border-border flex items-end justify-between">
                     <div>
-                      <p className="text-[13px] font-semibold text-secondary uppercase tracking-wider">Total Amount</p>
+                      <p className="text-[13px] font-semibold text-text-secondary uppercase tracking-wider">Total Amount</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-3xl font-heading font-bold text-brand-600">
+                      <p className="text-3xl font-heading font-bold text-primary">
                         ₹{totalAmount.toLocaleString('en-IN')}
                       </p>
                     </div>
@@ -323,7 +323,7 @@ export default function NewReservation() {
                     >
                       Confirm Booking
                     </Button>
-                    <p className="text-center text-[11px] text-secondary mt-3">
+                    <p className="text-center text-[11px] text-text-secondary mt-3">
                       Please verify guest details and dates before confirming.
                     </p>
                   </div>

@@ -69,12 +69,7 @@ export function Modal({
             children
           ) : (
             <div
-              className="rounded-2xl overflow-hidden"
-              style={{
-                backgroundColor: 'var(--bg-card)',
-                border: '1px solid var(--border-card)',
-                boxShadow: '0 24px 64px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.12)',
-              }}
+              className="rounded-card overflow-hidden bg-surface border border-border shadow-elevated"
             >
               {children}
             </div>

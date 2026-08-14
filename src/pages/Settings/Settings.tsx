@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { PageContainer } from '../../components/ui/PageContainer';
 import { AppSettings } from '../../types';
 import { settingsService } from '../../services/settingsService';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
@@ -51,11 +52,15 @@ export default function Settings() {
   if (isLoading || !settings) return <LoadingState />;
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
-      <div>
-        <h1 className="text-3xl font-heading font-semibold text-text-primary">Settings</h1>
-        <p className="text-text-secondary mt-1">Application preferences and configuration.</p>
-      </div>
+    <PageContainer
+      title="Settings"
+      description="Application preferences and configuration."
+      breadcrumbs={[
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Settings' }
+      ]}
+    >
+      <div className="space-y-6 max-w-2xl mx-auto w-full">
 
       <Card>
         <CardHeader>
@@ -90,6 +95,7 @@ export default function Settings() {
           </div>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </PageContainer>
   );
 }

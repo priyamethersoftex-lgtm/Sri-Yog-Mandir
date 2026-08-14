@@ -89,7 +89,7 @@ export default function GalleryList() {
         { label: 'Gallery' }
       ]}
       action={
-        <Button onClick={() => setIsUploadModalOpen(true)} className="gap-2 shadow-brand">
+        <Button onClick={() => setIsUploadModalOpen(true)} className="gap-2">
           <ImagePlus size={18} /> Upload Media
         </Button>
       }
@@ -101,10 +101,10 @@ export default function GalleryList() {
               key={cat}
               onClick={() => setActiveTab(cat)}
               className={cn(
-                "px-5 py-2.5 text-[13px] font-bold rounded-xl transition-all duration-300 whitespace-nowrap shadow-sm",
+                "px-5 py-2 text-[13px] font-semibold rounded-button transition-all duration-200 whitespace-nowrap",
                 activeTab === cat 
-                  ? "bg-brand-500 text-white shadow-brand ring-2 ring-brand-500/20 ring-offset-2 ring-offset-background" 
-                  : "bg-surface text-secondary hover:text-primary hover:bg-muted border border-theme"
+                  ? "bg-primary text-white shadow-sm" 
+                  : "bg-surface text-text-secondary hover:text-text hover:bg-surface-muted border border-border"
               )}
             >
               {cat}
@@ -113,19 +113,19 @@ export default function GalleryList() {
         </div>
 
         {filteredItems.length === 0 ? (
-          <div className="h-64 flex flex-col items-center justify-center bg-surface border border-theme border-dashed rounded-2xl text-secondary/60">
+          <div className="h-64 flex flex-col items-center justify-center bg-surface border border-border border-dashed rounded-2xl text-text-secondary/60">
             <ImagePlus size={48} className="mb-4 opacity-30" />
             <p className="text-[15px] font-medium">No media found in this category.</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
             {filteredItems.map(item => (
-              <Card key={item.id} className="overflow-hidden group hover:border-brand-500 hover:shadow-xl transition-all duration-300">
-                <div className="relative aspect-square bg-muted/30 overflow-hidden">
+              <Card key={item.id} className="overflow-hidden group hover:border-primary hover:shadow-xl transition-all duration-300">
+                <div className="relative aspect-square bg-surface-muted/50 overflow-hidden">
                   {item.url ? (
                     <img src={item.url} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-secondary/40">No Image</div>
+                    <div className="w-full h-full flex items-center justify-center text-text-secondary/40">No Image</div>
                   )}
                   
                   {/* Hover Overlay */}
@@ -146,9 +146,11 @@ export default function GalleryList() {
           </div>
         )}
 
-        <Modal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} title="Upload Media">
-          <form onSubmit={handleUploadSubmit} className="space-y-5">
-            <div className="p-4 bg-muted/20 border border-theme border-dashed rounded-xl">
+        <Modal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)}>
+          <div className="p-6">
+            <h2 className="text-xl font-bold mb-6 text-text">Upload Media</h2>
+            <form onSubmit={handleUploadSubmit} className="space-y-5">
+              <div className="p-4 bg-surface-muted/30 border border-border border-dashed rounded-xl">
               <ImageUploader 
                 value={uploadData.url} 
                 onChange={(url) => setUploadData({ ...uploadData, url })}
@@ -178,11 +180,12 @@ export default function GalleryList() {
                 placeholder="Short description for SEO or alt text"
               />
             </div>
-            <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-theme/50">
+            <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-border">
               <Button type="button" variant="ghost" onClick={() => setIsUploadModalOpen(false)}>Cancel</Button>
-              <Button type="submit" className="shadow-brand">Upload Asset</Button>
+              <Button type="submit">Upload Asset</Button>
             </div>
-          </form>
+            </form>
+          </div>
         </Modal>
 
         <ConfirmationDialog 

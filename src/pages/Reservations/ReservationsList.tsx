@@ -90,39 +90,40 @@ export default function ReservationsList() {
             keyExtractor={(b) => b.id}
             columns={[
               {
-                header: 'Booking ID',
-                cell: (b) => <span className="font-bold text-primary">{b.id}</span>
-              },
-              {
-                header: 'Guest',
+                header: 'GUEST INFO',
                 cell: (b) => (
-                  <div>
-                    <p className="font-bold text-primary">{b.guest.fullName}</p>
-                    <p className="text-[12px] text-secondary">{b.guest.phone}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-[15px] flex-shrink-0">
+                      {b.guest.fullName.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-extrabold text-brand-dark text-[13px] uppercase tracking-wide">{b.guest.fullName}</p>
+                      <p className="text-[11px] text-text-muted mt-0.5 tracking-wider font-medium">{b.id}</p>
+                      <p className="text-[11px] text-text-muted flex items-center gap-1 font-medium mt-0.5">
+                         <span className="text-[10px]">📞</span> {b.guest.phone}
+                      </p>
+                    </div>
                   </div>
                 )
               },
               {
-                header: 'Dates',
+                header: 'DATES',
                 cell: (b) => (
-                  <div className="text-[13px] text-secondary">
-                    <p className="font-medium text-primary">
-                      {format(parseISO(b.stay.checkIn), 'dd MMM')} - {format(parseISO(b.stay.checkOut), 'dd MMM')}
-                    </p>
-                    <p className="text-[12px]">({b.stay.nights} nights)</p>
+                  <div className="text-[13px] font-bold text-text flex items-center gap-1.5">
+                    <span className="text-[11px] opacity-70">📅</span> {format(parseISO(b.stay.checkIn), 'dd MMM yyyy')}
                   </div>
                 )
               },
               {
-                header: 'Room',
-                cell: (b) => <span className="text-[14px] font-medium">{b.stay.roomId}</span>
+                header: 'ROOM',
+                cell: (b) => <span className="text-[14px] font-medium text-text">{b.stay.roomId}</span>
               },
               {
-                header: 'Amount',
-                cell: (b) => <span className="font-bold">₹{b.totalAmount.toLocaleString('en-IN')}</span>
+                header: 'AMOUNT',
+                cell: (b) => <span className="font-bold text-text">₹{b.totalAmount.toLocaleString('en-IN')}</span>
               },
               {
-                header: 'Status',
+                header: 'STATUS',
                 cell: (b) => <Badge variant={getStatusColor(b.status) as any}>{b.status}</Badge>
               },
               {
