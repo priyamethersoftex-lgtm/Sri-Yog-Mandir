@@ -1,6 +1,6 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
-import { Menu, Sun, Moon, ChevronLeft, ChevronRight, Hotel } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Menu, Sun, Moon, ChevronLeft, ChevronRight, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 
@@ -40,14 +40,41 @@ interface HeaderProps {
 
 export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderProps) {
   const location = useLocation();
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const theme = isDark ? 'dark' : 'light';
   const { section, page } = getPageTitle(location.pathname);
 
+  const displayName = user?.name || 'Admin User';
+  const firstChar = displayName.charAt(0).toUpperCase();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleProfile = () => {
+    setDropdownOpen(false);
+    navigate('/profile');
+  };
+
+  const handleLogout = () => {
+    setDropdownOpen(false);
+    logout();
+  };
+
   return (
-    <header 
+    <header
       className="h-[60px] flex-shrink-0 flex items-center gap-2 sm:gap-4 px-3 sm:px-5 sticky top-0 z-30"
       style={{
         backgroundColor: 'var(--color-surface)',
@@ -56,6 +83,7 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
         WebkitBackdropFilter: 'blur(12px)'
       }}
     >
+      {/* Left: toggle + breadcrumb */}
       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
         {onToggle && (
           <button
@@ -77,7 +105,7 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
           <Menu size={19} />
         </button>
 
-        <div 
+        <div
           className="flex-col justify-center flex-1 min-w-0 pl-2 sm:pl-3"
           style={{ borderLeft: '1px solid var(--color-border)' }}
         >
@@ -90,7 +118,7 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
               </>
             )}
           </div>
-          <h1 
+          <h1
             className="text-[14px] font-bold truncate leading-tight sm:mt-0.5"
             style={{ color: 'var(--color-text)' }}
           >
@@ -99,7 +127,9 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
         </div>
       </div>
 
+      {/* Right: theme toggle + admin avatar dropdown */}
       <div className="flex items-center gap-1 flex-shrink-0">
+        {/* Theme toggle */}
         <button
           onClick={toggleTheme}
           id="theme-toggle-btn"
@@ -136,21 +166,68 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
           </span>
         </button>
 
-        <div 
-          className="hidden sm:flex items-center gap-2 pl-3 ml-1.5"
+        {/* Admin avatar + dropdown */}
+        <div
+          ref={dropdownRef}
+          className="relative flex items-center gap-2 pl-3 ml-1.5"
           style={{ borderLeft: '1px solid var(--color-border)' }}
         >
-          <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-primary">
-             <Hotel size={14} className="text-white" />
-          </div>
-          <div className="hidden md:block">
-            <p className="text-sm font-bold leading-none" style={{ color: 'var(--color-text)' }}>
-              Banaras Yog Mandir
-            </p>
-            <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-              Admin Portal
-            </p>
-          </div>
+          <button
+            id="admin-avatar-btn"
+            onClick={() => setDropdownOpen(prev => !prev)}
+            className="flex items-center gap-2.5 cursor-pointer group outline-none"
+            aria-haspopup="true"
+            aria-expanded={dropdownOpen}
+          >
+            {/* Avatar circle */}
+            <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-primary text-white text-[13px] font-black select-none">
+              {firstChar}
+            </div>
+            {/* Name (hidden on small screens) */}
+            <div className="hidden md:block text-left">
+              <p className="text-[12px] font-bold leading-none" style={{ color: 'var(--color-text)' }}>
+                {displayName}
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-wider mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
+                Super Admin
+              </p>
+            </div>
+          </button>
+
+          {/* Dropdown */}
+          {dropdownOpen && (
+            <div
+              className="absolute right-0 top-[calc(100%+10px)] w-48 rounded-xl border bg-surface shadow-elevated z-50 overflow-hidden animate-fade-in"
+              style={{ borderColor: 'var(--color-border)' }}
+            >
+              {/* User info header */}
+              <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                <p className="text-[12px] font-bold" style={{ color: 'var(--color-text)' }}>{displayName}</p>
+                <p className="text-[10px] font-medium mt-0.5" style={{ color: 'var(--color-text-muted)' }}>admin@banarasyogmandir.com</p>
+              </div>
+
+              {/* Menu items */}
+              <div className="p-1.5 space-y-0.5">
+                <button
+                  id="dropdown-profile-btn"
+                  onClick={handleProfile}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors cursor-pointer hover:bg-surface-muted text-left"
+                  style={{ color: 'var(--color-text-secondary)' }}
+                >
+                  <User size={14} className="flex-shrink-0" />
+                  Profile
+                </button>
+                <button
+                  id="dropdown-logout-btn"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-semibold transition-colors cursor-pointer hover:bg-semantic-danger/10 text-left text-semantic-danger"
+                >
+                  <LogOut size={14} className="flex-shrink-0" />
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

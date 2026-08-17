@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard, LogOut, ChevronDown, CalendarDays, BedDouble, Image as ImageIcon, Settings, User
+  LayoutDashboard, LogOut, ChevronDown, CalendarDays, BedDouble, Image as ImageIcon, Settings
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import yogaMandirLogo from "../../assets/yogaMandirImage.png";
@@ -32,11 +32,7 @@ const NAV_ITEMS = [
     to: "/gallery",
     icon: <ImageIcon size={17} />,
   },
-  {
-    label: "Profile",
-    to: "/profile",
-    icon: <User size={17} />,
-  },
+
   {
     label: "Settings",
     to: "/settings",
