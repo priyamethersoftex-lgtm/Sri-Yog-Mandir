@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import yogaMandirLogo from "../../assets/yogaMandirImage.png";
+import Logo from "../common/Logo";
 
 const NAV_ITEMS = [
   {
@@ -98,22 +99,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         >
           <Link to="/" className="flex items-center justify-center w-full h-full cursor-pointer hover:opacity-80 transition-opacity">
             {!isExpanded ? (
-              <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
-                BY
-              </div>
+              <img src={yogaMandirLogo} alt="Logo" className="w-8 h-8 object-contain rounded-full drop-shadow-md" />
             ) : (
-              <div className="animate-fade-in overflow-hidden flex items-center gap-2 h-full w-full py-2">
-                 <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
-                  BY
-                 </div>
-                 <div className="flex flex-col">
-                  <span className="font-bold text-[14px] text-[var(--sidebar-brand-text)] tracking-tight leading-tight">
-                    Banaras Yog
-                  </span>
-                  <span className="text-[9px] font-semibold text-[var(--sidebar-text-muted)] uppercase tracking-wider">
-                    Mandir PMS
-                  </span>
-                </div>
+              <div className="animate-fade-in w-full flex items-center py-2">
+                 <Logo size="sm" variant="colored" subtitleClassName="!text-primary" />
               </div>
             )}
           </Link>
