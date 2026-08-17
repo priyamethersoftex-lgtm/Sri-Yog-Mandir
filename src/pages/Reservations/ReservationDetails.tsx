@@ -85,7 +85,7 @@ export default function ReservationDetails() {
             <ArrowLeft size={24} />
           </button>
           <div>
-            <h1 className="text-3xl font-heading font-semibold text-text flex items-center gap-3">
+            <h1 className="text-[22px] font-bold tracking-tight leading-tight text-text flex items-center gap-3">
               Booking {booking.id}
               <StatusBadge status={booking.status} className="text-sm px-3 py-1" />
             </h1>

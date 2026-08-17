@@ -35,9 +35,9 @@ export default {
         },
       },
       fontFamily: {
-        heading: ['"Cinzel Decorative"', '"Playfair Display"', 'serif'],
-        serif: ['"Playfair Display"', '"Cormorant Garamond"', 'serif'],
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        heading: ['"Inter"', 'system-ui', 'sans-serif'],
+        serif: ['"Inter"', 'system-ui', 'sans-serif'],
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.03)',

@@ -110,7 +110,7 @@ export default function RoomsList() {
             <CardContent className="p-5 flex-1 flex flex-col">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-xl font-sans font-bold text-text">{room.name}</h3>
+                  <h3 className="text-[16px] font-bold text-text leading-tight">{room.name}</h3>
                   <p className="text-[13px] text-text-secondary font-medium mt-1">{room.category}</p>
                 </div>
                 <div className="text-right">

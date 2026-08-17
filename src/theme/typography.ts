@@ -1,6 +1,6 @@
 export const typography = {
   fonts: {
-    heading: '"Playfair Display", serif',
-    sans: '"Plus Jakarta Sans", sans-serif',
+    heading: '"Inter", system-ui, sans-serif',
+    sans: '"Inter", system-ui, sans-serif',
   },
 };

@@ -28,7 +28,7 @@ interface DataTableProps<T> {
 function TH({ children, className = '' }: { children: React.ReactNode, className?: string }) {
   return (
     <th 
-      className={`py-4 px-4 text-[12px] font-extrabold uppercase tracking-widest whitespace-nowrap text-brand-dark ${className}`} 
+      className={`py-4 px-4 text-[11px] font-bold uppercase tracking-wider whitespace-nowrap text-brand-dark ${className}`} 
     >
       {children}
     </th>

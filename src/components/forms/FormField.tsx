@@ -22,7 +22,7 @@ export const FormField = React.forwardRef<any, FormFieldProps>(
 
     return (
       <div className="space-y-1.5">
-        <label className="block text-[13px] font-semibold text-text-secondary">
+        <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary">
           {label}
         </label>
         

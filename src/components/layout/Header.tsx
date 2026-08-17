@@ -81,7 +81,7 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
           className="flex-col justify-center flex-1 min-w-0 pl-2 sm:pl-3"
           style={{ borderLeft: '1px solid var(--color-border)' }}
         >
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] overflow-hidden" style={{ color: 'var(--color-text-muted)' }}>
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-medium leading-normal overflow-hidden" style={{ color: 'var(--color-text-muted)' }}>
             <span className="truncate flex-shrink-0">{section}</span>
             {section !== page && (
               <>
@@ -91,7 +91,7 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
             )}
           </div>
           <h1 
-            className="text-sm font-bold truncate leading-tight sm:mt-0.5"
+            className="text-[14px] font-bold truncate leading-tight sm:mt-0.5"
             style={{ color: 'var(--color-text)' }}
           >
             {page}

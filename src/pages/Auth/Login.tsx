@@ -37,7 +37,7 @@ export default function Login() {
           <div className="w-20 h-20 rounded-2xl bg-white p-2 flex items-center justify-center shadow-lotus border border-brand-500/20 mb-4 transform hover:scale-105 transition-transform duration-300">
             <img src={yogaMandirLogo} alt="Banaras Yog Mandir Logo" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-3xl font-heading font-extrabold bg-gradient-to-r from-brand-600 via-coral-500 to-plum-600 bg-clip-text text-transparent mb-1">
+          <h1 className="text-[28px] font-extrabold tracking-tight bg-gradient-to-r from-brand-600 via-coral-500 to-plum-600 bg-clip-text text-transparent mb-1">
             Banaras Yog Mandir
           </h1>
           <p className="text-text-secondary text-sm font-medium">Property Management System Portal</p>

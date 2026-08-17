@@ -307,7 +307,7 @@ export default function NewReservation() {
                       <p className="text-[13px] font-semibold text-text-secondary uppercase tracking-wider">Total Amount</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-3xl font-heading font-bold text-primary">
+                      <p className="text-[28px] font-bold tracking-tight text-primary">
                         ₹{totalAmount.toLocaleString('en-IN')}
                       </p>
                     </div>

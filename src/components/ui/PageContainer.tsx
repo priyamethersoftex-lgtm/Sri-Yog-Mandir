@@ -29,7 +29,7 @@ export function PageContainer({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
         <div className="space-y-1">
           {breadcrumbs && breadcrumbs.length > 0 && (
-            <nav className="flex text-[12px] text-text-muted mb-3 font-semibold uppercase tracking-wider">
+            <nav className="flex text-[11px] text-text-muted mb-3 font-medium leading-normal">
               {breadcrumbs.map((bc, idx) => (
                 <div key={idx} className="flex items-center">
                   {idx > 0 && <span className="mx-2 text-text-muted/40">/</span>}
@@ -46,7 +46,7 @@ export function PageContainer({
             {title}
           </h1>
           {description && (
-            <p className="text-[14px] text-text-muted font-medium">{description}</p>
+            <p className="text-[13px] leading-relaxed text-text-muted font-medium">{description}</p>
           )}
         </div>
         
