@@ -21,5 +21,12 @@ export const ENDPOINTS = {
   },
   UPLOAD: {
     IMAGE: '/upload/image',
+  },
+  GALLERY: {
+    GET: '/admin/gallery/galleryget',
+    CREATE: '/admin/gallery/gallerycreate',
+    UPDATE: '/admin/gallery/galleryupdate',
+    UPDATE_STATUS: '/admin/gallery/galleryupdatestatus',
+    DELETE: '/admin/gallery/gallerydelete',
   }
 };

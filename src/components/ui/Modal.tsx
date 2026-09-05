@@ -75,7 +75,7 @@ export const Modal = ({
       aria-labelledby={title ? titleId : undefined}
       aria-describedby={description ? descId : undefined}
       aria-label={!title && ariaLabel ? ariaLabel : undefined}
-      className={`backdrop:bg-primary/20 backdrop:backdrop-blur-sm bg-surface p-0 rounded-lg shadow-modal border border-border w-full max-w-lg m-auto focus:outline-none transition-all ${className}`}
+      className={`backdrop:bg-primary/20 backdrop:backdrop-blur-sm bg-surface p-0 rounded-lg shadow-modal border border-border w-full max-w-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 focus:outline-none transition-all ${className}`}
       {...props}
     >
       <div className="flex flex-col h-full">

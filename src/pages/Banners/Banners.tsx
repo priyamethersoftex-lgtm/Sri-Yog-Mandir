@@ -3,7 +3,7 @@ import { PageContainer } from '../../components/ui/PageContainer';
 import { DataTable } from '../../components/ui/DataTable';
 import { Button } from '../../components/ui/Button';
 import { FormField } from '../../components/forms/FormField';
-import { ConfirmationDialog } from '../../components/ui/ConfirmationDialog';
+import { Modal } from '../../components/ui/Modal';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { ImageUploader } from '../../components/forms/ImageUploader';
 import { Drawer } from '../../components/ui/Drawer';
@@ -346,17 +346,17 @@ export default function Banners() {
         </form>
       </Drawer>
 
-      {/* Delete Confirmation */}
-      <ConfirmationDialog
+      <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDelete}
         title="Delete Banner"
-        message={`Are you sure you want to delete "${selectedBanner?.title}"? This action cannot be undone.`}
-        confirmText="Delete"
-        isLoading={isSubmitting}
-        isDestructive
-      />
+        description={`Are you sure you want to delete "${selectedBanner?.title}"? This action cannot be undone.`}
+      >
+        <div className="flex justify-end gap-3 mt-4">
+          <Button variant="outline" onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
+          <Button variant="danger" isLoading={isSubmitting} onClick={handleDelete}>Delete</Button>
+        </div>
+      </Modal>
 
       {/* Image Preview Modal */}
       <ImagePreviewModal 
