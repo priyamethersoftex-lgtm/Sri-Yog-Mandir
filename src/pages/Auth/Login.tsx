@@ -7,8 +7,8 @@ import { toast } from 'sonner';
 import yogaMandirLogo from '../../assets/yogaMandirImage.png';
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@banarasyogmandir.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -66,11 +66,6 @@ export default function Login() {
           </div>
         </form>
 
-        <div className="mt-6 text-center text-sm text-text-secondary bg-brand-500/10 dark:bg-brand-500/15 p-3.5 rounded-2xl border border-brand-500/20">
-          <p className="font-bold text-brand-600 dark:text-brand-400 mb-1">Demo Credentials</p>
-          <p className="text-xs">Email: <span className="font-mono font-semibold">admin@banarasyogmandir.com</span></p>
-          <p className="text-xs">Password: <span className="font-mono font-semibold">admin123</span></p>
-        </div>
       </div>
     </div>
   );

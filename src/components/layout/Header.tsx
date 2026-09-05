@@ -49,7 +49,8 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
   const theme = isDark ? 'dark' : 'light';
   const { section, page } = getPageTitle(location.pathname);
 
-  const displayName = user?.name || 'Admin User';
+  const userEmail = user?.email || 'admin@banarasyogmandir.com';
+  const displayName = userEmail.split('@')[0];
   const firstChar = displayName.charAt(0).toUpperCase();
 
   // Close dropdown when clicking outside
@@ -186,10 +187,10 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
             {/* Name (hidden on small screens) */}
             <div className="hidden md:block text-left">
               <p className="text-[12px] font-bold leading-none" style={{ color: 'var(--color-text)' }}>
-                {displayName}
+                {userEmail}
               </p>
               <p className="text-[10px] font-bold uppercase tracking-wider mt-0.5" style={{ color: 'var(--color-text-muted)' }}>
-                Super Admin
+                {user?.role ? user.role.replace(/_/g, ' ') : 'Super Admin'}
               </p>
             </div>
           </button>
@@ -203,7 +204,7 @@ export default function Header({ onMenuClick, isOpen = true, onToggle }: HeaderP
               {/* User info header */}
               <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
                 <p className="text-[12px] font-bold" style={{ color: 'var(--color-text)' }}>{displayName}</p>
-                <p className="text-[10px] font-medium mt-0.5" style={{ color: 'var(--color-text-muted)' }}>admin@banarasyogmandir.com</p>
+                <p className="text-[10px] font-medium mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{userEmail}</p>
               </div>
 
               {/* Menu items */}

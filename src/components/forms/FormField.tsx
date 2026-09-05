@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from '../../utils/cn';
+import { Eye, EyeOff } from 'lucide-react';
 
 interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> {
   label: string;
@@ -11,6 +12,8 @@ interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement | HT
 
 export const FormField = React.forwardRef<any, FormFieldProps>(
   ({ label, error, className, as = 'input', options, children, ...props }, ref) => {
+    const [showPassword, setShowPassword] = useState(false);
+
     const inputClass = cn(
       "w-full bg-surface border rounded-input px-4 h-10 text-[14px] text-text transition-all duration-200 focus:outline-none focus:ring-2 font-medium",
       error 
@@ -27,7 +30,24 @@ export const FormField = React.forwardRef<any, FormFieldProps>(
         </label>
         
         {as === 'input' && (
-          <input ref={ref} className={inputClass} {...(props as any)} />
+          <div className="relative">
+            <input 
+              ref={ref} 
+              className={cn(inputClass, props.type === 'password' && 'pr-10')} 
+              {...(props as any)} 
+              type={props.type === 'password' && showPassword ? 'text' : props.type} 
+            />
+            {props.type === 'password' && (
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text transition-colors flex items-center justify-center"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            )}
+          </div>
         )}
         
         {as === 'textarea' && (

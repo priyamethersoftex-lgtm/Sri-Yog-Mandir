@@ -1,0 +1,15 @@
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://192.168.31.24:7386/api/v1';
+
+export const ENDPOINTS = {
+  AUTH: {
+    LOGIN: '/admin/auth/login',
+    UPDATE_PASSWORD: '/admin/auth/update-password',
+  },
+  USER: {
+    GET: '/admin/user/userget',
+    CREATE: '/admin/user/usercreate',
+    UPDATE: '/admin/user/userupdate',
+    UPDATE_STATUS: '/admin/user/userupdatestatus',
+    DELETE: '/admin/user/userdelete',
+  }
+};

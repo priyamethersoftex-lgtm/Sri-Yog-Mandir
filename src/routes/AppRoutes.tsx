@@ -13,7 +13,7 @@ import GalleryList from '../pages/Gallery/GalleryList';
 import Login from '../pages/Auth/Login';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import Profile from '../pages/Settings/Profile';
-import Settings from '../pages/Settings/Settings';
+import Administrator from '../pages/Settings/Administrator';
 
 const NotFound = () => <div className="p-8 text-center"><h2 className="text-2xl font-bold">404 - Not Found</h2></div>;
 
@@ -36,7 +36,7 @@ export function AppRoutes() {
           
           <Route path="/gallery" element={<GalleryList />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/settings/administrator" element={<Administrator />} />
         </Route>
       </Route>
       
@@ -44,3 +44,4 @@ export function AppRoutes() {
     </Routes>
   );
 }
+

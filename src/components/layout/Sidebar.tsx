@@ -35,8 +35,10 @@ const NAV_ITEMS = [
 
   {
     label: "Settings",
-    to: "/settings",
     icon: <Settings size={17} />,
+    subItems: [
+      { label: "Administrator", to: "/settings/administrator" },
+    ],
   },
 ];
 
@@ -203,12 +205,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 style={{ background: "var(--sidebar-user-avatar-bg)" }}
               >
                 <span className="text-xs font-bold text-white">
-                  {(user?.name ?? "A").charAt(0).toUpperCase()}
+                  {((user?.email || "A").charAt(0)).toUpperCase()}
                 </span>
               </div>
               <div className="overflow-hidden min-w-0 flex-1">
                 <p className="text-[13px] font-bold truncate" style={{ color: "var(--sidebar-user-text)" }}>
-                  {user?.name || 'Administrator'}
+                  {user?.email?.split('@')[0] || 'Administrator'}
                 </p>
                 <p className="text-[10px] uppercase font-bold tracking-widest truncate mt-0.5" style={{ color: "var(--sidebar-user-sub)" }}>
                   SUPER ADMIN

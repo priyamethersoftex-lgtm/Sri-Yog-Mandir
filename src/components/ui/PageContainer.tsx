@@ -28,20 +28,7 @@ export function PageContainer({
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
         <div className="space-y-1">
-          {breadcrumbs && breadcrumbs.length > 0 && (
-            <nav className="flex text-[11px] text-text-muted mb-3 font-medium leading-normal">
-              {breadcrumbs.map((bc, idx) => (
-                <div key={idx} className="flex items-center">
-                  {idx > 0 && <span className="mx-2 text-text-muted/40">/</span>}
-                  {bc.href ? (
-                    <a href={bc.href} className="hover:text-primary transition-colors">{bc.label}</a>
-                  ) : (
-                    <span className="text-text">{bc.label}</span>
-                  )}
-                </div>
-              ))}
-            </nav>
-          )}
+
           <h1 className="text-[22px] font-sans font-bold text-text tracking-tight leading-tight">
             {title}
           </h1>
