@@ -38,7 +38,7 @@ export default function Login() {
             <img src={yogaMandirLogo} alt="Banaras Yog Mandir Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-[28px] font-extrabold tracking-tight bg-gradient-to-r from-brand-600 via-coral-500 to-plum-600 bg-clip-text text-transparent mb-1">
-            Banaras Yog Mandir
+            Sri Yoga Mandir
           </h1>
           <p className="text-text-secondary text-sm font-medium">Property Management System Portal</p>
         </div>
@@ -49,6 +49,7 @@ export default function Login() {
             type="email" 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email address"
             required 
           />
           <FormField 
@@ -56,6 +57,7 @@ export default function Login() {
             type="password" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
             required 
           />
           

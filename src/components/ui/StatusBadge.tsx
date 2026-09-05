@@ -4,7 +4,8 @@ import { Badge } from './Badge';
 // Matches RoomStatus and BookingStatus from types
 type StatusType = 
   | 'Available' | 'Reserved' | 'Occupied' | 'Maintenance'
-  | 'Pending' | 'Confirmed' | 'Checked In' | 'Checked Out' | 'Cancelled';
+  | 'Pending' | 'Confirmed' | 'Checked In' | 'Checked Out' | 'Cancelled'
+  | 'Active' | 'Inactive' | 'active' | 'inactive';
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -17,6 +18,8 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   switch (status) {
     case 'Available':
     case 'Confirmed':
+    case 'Active':
+    case 'active':
       variant = 'success';
       break;
     case 'Occupied':
@@ -30,6 +33,8 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       break;
     case 'Maintenance':
     case 'Cancelled':
+    case 'Inactive':
+    case 'inactive':
       variant = 'danger';
       break;
   }

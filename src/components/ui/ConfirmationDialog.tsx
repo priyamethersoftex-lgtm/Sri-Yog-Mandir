@@ -26,25 +26,18 @@ export function ConfirmationDialog({
   isLoading = false,
 }: ConfirmationDialogProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md">
-      <div className="p-6">
-        <h2 className="text-xl font-bold mb-2 text-text">{title}</h2>
-        <div className="mb-6">
-          <p className="text-text-secondary font-sans">{message}</p>
-        </div>
-        
-        <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            {cancelText}
-          </Button>
-          <Button 
-            variant={isDestructive ? 'danger' : 'primary'} 
-            onClick={onConfirm}
-            isLoading={isLoading}
-          >
-            {confirmText}
-          </Button>
-        </div>
+    <Modal isOpen={isOpen} onClose={onClose} title={title} description={message} className="max-w-md">
+      <div className="flex justify-end gap-3 pt-2">
+        <Button variant="outline" onClick={onClose} disabled={isLoading}>
+          {cancelText}
+        </Button>
+        <Button 
+          variant={isDestructive ? 'danger' : 'primary'} 
+          onClick={onConfirm}
+          isLoading={isLoading}
+        >
+          {confirmText}
+        </Button>
       </div>
     </Modal>
   );

@@ -3,6 +3,7 @@ import { PageContainer } from '../../components/ui/PageContainer';
 import { DataTable } from '../../components/ui/DataTable';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
+import { Drawer } from '../../components/ui/Drawer';
 import { FormField } from '../../components/forms/FormField';
 import { ConfirmationDialog } from '../../components/ui/ConfirmationDialog';
 import { StatusBadge } from '../../components/ui/StatusBadge';
@@ -209,47 +210,41 @@ export default function Administrator() {
         onPageChange={setPage}
       />
 
-      {/* Create Modal */}
-      <Modal isOpen={isCreateModalOpen} onClose={() => { setIsCreateModalOpen(false); resetForm(); }}>
-        <div className="p-6">
-          <h2 className="text-[18px] font-bold mb-5 text-text">Add New Administrator</h2>
-          <form onSubmit={handleCreateSubmit} className="space-y-4">
-            <FormField label="Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
-            <FormField label="Email" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required />
-            <FormField label="Phone" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required />
-            <FormField label="Password" type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required />
-            <FormField label="Role" as="select" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} required>
-              <option value="SUPER_ADMIN">Super Admin</option>
-              <option value="USER">User</option>
-            </FormField>
-            
-            <div className="pt-5 flex justify-end gap-3 mt-6">
-              <Button type="button" variant="outline" onClick={() => { setIsCreateModalOpen(false); resetForm(); }}>Cancel</Button>
-              <Button type="submit" isLoading={isSubmitting}>Create User</Button>
-            </div>
-          </form>
-        </div>
-      </Modal>
+      {/* Create Drawer */}
+      <Drawer isOpen={isCreateModalOpen} onClose={() => { setIsCreateModalOpen(false); resetForm(); }} title="Add New Administrator">
+        <form onSubmit={handleCreateSubmit} className="flex flex-col space-y-4 pb-6">
+          <FormField label="Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="Enter full name" required />
+          <FormField label="Email" type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="Enter email address" required />
+          <FormField label="Phone" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="Enter phone number" required />
+          <FormField label="Password" type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} placeholder="Enter a secure password" required />
+          <FormField label="Role" as="select" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} required>
+            <option value="SUPER_ADMIN">Super Admin</option>
+            <option value="USER">User</option>
+          </FormField>
+          
+          <div className="pt-5 flex gap-3 mt-8">
+            <Button type="button" variant="outline" className="flex-1" onClick={() => { setIsCreateModalOpen(false); resetForm(); }}>Cancel</Button>
+            <Button type="submit" className="flex-1" isLoading={isSubmitting}>Create User</Button>
+          </div>
+        </form>
+      </Drawer>
 
-      {/* Edit Modal */}
-      <Modal isOpen={isEditModalOpen} onClose={() => { setIsEditModalOpen(false); resetForm(); }}>
-        <div className="p-6">
-          <h2 className="text-[18px] font-bold mb-5 text-text">Edit Administrator</h2>
-          <form onSubmit={handleEditSubmit} className="space-y-4">
-            <FormField label="Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
-            <FormField label="Phone" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required />
-            <FormField label="Role" as="select" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} required>
-              <option value="SUPER_ADMIN">Super Admin</option>
-              <option value="USER">User</option>
-            </FormField>
-            
-            <div className="pt-5 flex justify-end gap-3 mt-6">
-              <Button type="button" variant="outline" onClick={() => { setIsEditModalOpen(false); resetForm(); }}>Cancel</Button>
-              <Button type="submit" isLoading={isSubmitting}>Save Changes</Button>
-            </div>
-          </form>
-        </div>
-      </Modal>
+      {/* Edit Drawer */}
+      <Drawer isOpen={isEditModalOpen} onClose={() => { setIsEditModalOpen(false); resetForm(); }} title="Edit Administrator">
+        <form onSubmit={handleEditSubmit} className="flex flex-col space-y-4 pb-6">
+          <FormField label="Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="Enter full name" required />
+          <FormField label="Phone" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="Enter phone number" required />
+          <FormField label="Role" as="select" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} required>
+            <option value="SUPER_ADMIN">Super Admin</option>
+            <option value="USER">User</option>
+          </FormField>
+          
+          <div className="pt-5 flex gap-3 mt-8">
+            <Button type="button" variant="outline" className="flex-1" onClick={() => { setIsEditModalOpen(false); resetForm(); }}>Cancel</Button>
+            <Button type="submit" className="flex-1" isLoading={isSubmitting}>Save Changes</Button>
+          </div>
+        </form>
+      </Drawer>
 
       {/* Delete Confirmation */}
       <ConfirmationDialog

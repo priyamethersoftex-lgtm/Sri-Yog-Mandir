@@ -9,6 +9,7 @@ import ReservationsList from '../pages/Reservations/ReservationsList';
 import NewReservation from '../pages/Reservations/NewReservation';
 import ReservationDetails from '../pages/Reservations/ReservationDetails';
 import GalleryList from '../pages/Gallery/GalleryList';
+import Banners from '../pages/Banners/Banners';
 
 import Login from '../pages/Auth/Login';
 import Dashboard from '../pages/Dashboard/Dashboard';
@@ -35,6 +36,7 @@ export function AppRoutes() {
           <Route path="/rooms/:id/edit" element={<RoomEdit />} />
           
           <Route path="/gallery" element={<GalleryList />} />
+          <Route path="/banners" element={<Banners />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings/administrator" element={<Administrator />} />
         </Route>

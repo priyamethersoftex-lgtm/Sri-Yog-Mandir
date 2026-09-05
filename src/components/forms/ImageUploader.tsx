@@ -5,16 +5,18 @@ import { Button } from '../ui/Button';
 
 interface ImageUploaderProps {
   value?: string;
-  onChange: (base64: string) => void;
+  onChange: (value: string) => void;
   onRemove?: () => void;
   className?: string;
+  onUpload?: (file: File) => Promise<void>;
+  isUploading?: boolean;
 }
 
-export function ImageUploader({ value, onChange, onRemove, className }: ImageUploaderProps) {
+export function ImageUploader({ value, onChange, onRemove, className, onUpload, isUploading }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>('');
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -30,13 +32,21 @@ export function ImageUploader({ value, onChange, onRemove, className }: ImageUpl
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target?.result) {
-        onChange(event.target.result as string);
+    if (onUpload) {
+      try {
+        await onUpload(file);
+      } catch (err: any) {
+        setError(err.message || 'Failed to upload image');
       }
-    };
-    reader.readAsDataURL(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          onChange(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -54,15 +64,33 @@ export function ImageUploader({ value, onChange, onRemove, className }: ImageUpl
               </Button>
             )}
           </div>
+          {isUploading && (
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center flex-col text-white">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-2"></div>
+              <span className="text-sm font-medium">Uploading...</span>
+            </div>
+          )}
         </div>
       ) : (
         <div 
-          onClick={() => fileInputRef.current?.click()}
-          className="w-full h-48 border-2 border-dashed border-theme rounded-lg flex flex-col items-center justify-center text-text-secondary hover:bg-background hover:text-text-primary cursor-pointer transition-colors"
+          onClick={() => !isUploading && fileInputRef.current?.click()}
+          className={cn(
+            "w-full h-48 border-2 border-dashed border-theme rounded-lg flex flex-col items-center justify-center text-text-secondary transition-colors relative",
+            !isUploading ? "hover:bg-background hover:text-text-primary cursor-pointer" : "cursor-wait opacity-80"
+          )}
         >
-          <Upload className="w-8 h-8 mb-2" />
-          <p className="text-sm font-medium">Click to upload image</p>
-          <p className="text-xs mt-1 text-text-secondary">JPG, PNG (max 2MB)</p>
+          {isUploading ? (
+            <div className="flex flex-col items-center text-primary">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
+              <p className="text-sm font-medium">Uploading...</p>
+            </div>
+          ) : (
+            <>
+              <Upload className="w-8 h-8 mb-2" />
+              <p className="text-sm font-medium">Click to upload image</p>
+              <p className="text-xs mt-1 text-text-secondary">JPG, PNG (max 2MB)</p>
+            </>
+          )}
         </div>
       )}
       

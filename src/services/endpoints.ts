@@ -11,5 +11,15 @@ export const ENDPOINTS = {
     UPDATE: '/admin/user/userupdate',
     UPDATE_STATUS: '/admin/user/userupdatestatus',
     DELETE: '/admin/user/userdelete',
+  },
+  BANNER: {
+    GET: '/admin/banner/bannerget',
+    CREATE: '/admin/banner/bannercreate',
+    UPDATE: '/admin/banner/bannerupdate',
+    UPDATE_STATUS: '/admin/banner/bannerupdatestatus',
+    DELETE: '/admin/banner/bannerdelete',
+  },
+  UPLOAD: {
+    IMAGE: '/upload/image',
   }
 };

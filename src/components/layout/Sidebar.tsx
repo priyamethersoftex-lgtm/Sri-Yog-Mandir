@@ -32,6 +32,11 @@ const NAV_ITEMS = [
     to: "/gallery",
     icon: <ImageIcon size={17} />,
   },
+  {
+    label: "Banners",
+    to: "/banners",
+    icon: <ImageIcon size={17} />,
+  },
 
   {
     label: "Settings",

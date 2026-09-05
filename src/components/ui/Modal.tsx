@@ -1,82 +1,97 @@
-import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useRef, useId } from "react";
+import type { HTMLAttributes } from "react";
+import { X } from "lucide-react";
+import { Button } from "./Button";
 
-interface ModalProps {
+export type BaseModalProps = HTMLAttributes<HTMLDialogElement> & {
   isOpen: boolean;
   onClose: () => void;
-  children: React.ReactNode;
-  maxWidth?: string;
-  noPadding?: boolean;
-  dark?: boolean;
-}
+  description?: string;
+};
 
-export function Modal({
+export type ModalProps = BaseModalProps &
+  (
+    | { title: string; ariaLabel?: string }
+    | { title?: string; ariaLabel: string }
+  );
+
+export const Modal = ({
   isOpen,
   onClose,
+  title,
+  description,
+  ariaLabel,
   children,
-  maxWidth = 'max-w-lg',
-  noPadding = false,
-  dark = false,
-}: ModalProps) {
-  const [mounted, setMounted] = useState(false);
-  const [visible, setVisible] = useState(false);
+  className = "",
+  ...props
+}: ModalProps) => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const titleId = useId();
+  const descId = useId();
 
   useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
     if (isOpen) {
-      setMounted(true);
-      // Lock body scroll
-      document.body.style.overflow = 'hidden';
-      requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
+      if (!dialog.open) {
+        previousFocusRef.current = document.activeElement as HTMLElement;
+        dialog.showModal();
+      }
     } else {
-      setVisible(false);
-      document.body.style.overflow = '';
-      const t = setTimeout(() => setMounted(false), 280);
-      return () => clearTimeout(t);
+      if (dialog.open) {
+        dialog.close();
+        
+        if (previousFocusRef.current) {
+          try {
+            previousFocusRef.current.focus();
+          } catch {
+            // Safe fallback if element is no longer focusable
+          }
+          previousFocusRef.current = null;
+        }
+      }
     }
   }, [isOpen]);
 
-  if (!mounted) return null;
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-  return createPortal(
-    <div
-      className="fixed inset-0 overflow-y-auto"
-      style={{ zIndex: 99999 }}
-      role="dialog"
-      aria-modal="true"
+    const handleCancel = (e: Event) => {
+      e.preventDefault();
+      onClose();
+    };
+
+    // Handle native ESC key
+    dialog.addEventListener("cancel", handleCancel);
+    return () => dialog.removeEventListener("cancel", handleCancel);
+  }, [onClose]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-labelledby={title ? titleId : undefined}
+      aria-describedby={description ? descId : undefined}
+      aria-label={!title && ariaLabel ? ariaLabel : undefined}
+      className={`backdrop:bg-primary/20 backdrop:backdrop-blur-sm bg-surface p-0 rounded-lg shadow-modal border border-border w-full max-w-lg m-auto focus:outline-none transition-all ${className}`}
+      {...props}
     >
-      <div className="min-h-full flex items-start sm:items-center justify-center p-4 sm:p-6 text-center">
-        {/* Backdrop */}
-        <div
-          className="absolute inset-0 transition-opacity duration-280"
-          style={{
-            backgroundColor: dark ? 'rgba(0,0,0,0.92)' : 'rgba(15,23,42,0.6)',
-            backdropFilter: 'blur(6px)',
-            opacity: visible ? 1 : 0,
-          }}
-          onClick={onClose}
-        />
-
-        {/* Panel */}
-        <div
-          className={`relative w-full ${maxWidth} transition-all duration-280 text-left`}
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.97)',
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {noPadding ? (
-            children
-          ) : (
-            <div
-              className="rounded-card overflow-hidden bg-surface border border-border shadow-elevated"
-            >
-              {children}
+      <div className="flex flex-col h-full">
+        <div className="flex flex-col space-y-1.5 p-6 border-b border-border">
+          <div className="flex items-start justify-between">
+            <div>
+              {title && <h2 id={titleId} className="text-lg font-semibold leading-none tracking-tight">{title}</h2>}
+              {description && <p id={descId} className="text-sm text-text-muted mt-2">{description}</p>}
             </div>
-          )}
+            <Button type="button" variant="ghost" size="icon" onClick={onClose} aria-label="Close modal" className="h-8 w-8 -mr-2">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
+        <div className="p-6">{children}</div>
       </div>
-    </div>,
-    document.body
+    </dialog>
   );
-}
+};
