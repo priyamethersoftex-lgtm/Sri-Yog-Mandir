@@ -31,6 +31,7 @@ export const ENDPOINTS = {
   },
   INQUIRY: {
     GET: '/admin/inquiry/inquiryget',
+    UPDATE_STATUS: '/admin/inquiry/inquiryupdatestatus',
   },
   AMENITY: {
     GET: '/admin/amenity/amenitylist',
