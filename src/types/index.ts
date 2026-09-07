@@ -54,6 +54,21 @@ export interface Guest {
   children: number;
 }
 
+export interface ReservationGuest {
+  id: number;
+  uuid?: string;
+  reservation_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  date_of_birth: string;
+  gender: string;
+  document_type: string;
+  document_number: string;
+  is_primary_guest: number | boolean;
+}
+
 export interface Stay {
   checkIn: string; // ISO date string (YYYY-MM-DD)
   checkOut: string; // ISO date string (YYYY-MM-DD)

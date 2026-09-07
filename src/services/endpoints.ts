@@ -75,5 +75,11 @@ export const ENDPOINTS = {
     CREATE: '/admin/reservation/reservationcreate',
     UPDATE: '/admin/reservation/reservationupdate',
     UPDATE_STATUS: '/admin/reservation/reservationupdatestatus',
+  },
+  GUEST: {
+    GET: '/admin/guest/guestget',
+    CREATE: '/admin/guest/guestcreate',
+    UPDATE: '/admin/guest/guestupdate',
+    DELETE: '/admin/guest/guestdelete',
   }
 };
