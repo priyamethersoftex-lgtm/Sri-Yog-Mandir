@@ -78,14 +78,37 @@ export type PaymentStatus = 'PENDING' | 'PARTIAL' | 'COMPLETED' | 'REFUNDED';
 export interface Reservation {
   id: number;
   uuid: string;
-  reservation_number: string;
-  customer_name: string;
+  room_id: number;
+  bed_type: string | null;
   check_in: string;
+  currency: string;
+  subtotal: number;
   check_out: string;
-  total_amount: number;
-  payment_status: PaymentStatus;
-  reservation_status: ReservationStatus;
+  room_name: string;
+  room_type: string | null;
+  room_view: string | null;
   created_at: string;
+  inquiry_id: number | null;
+  room_price: number;
+  updated_at: string;
+  cancelled_at: string | null;
+  payment_date: string | null;
+  total_amount: number;
+  total_guests: number;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
+  payment_amount: number;
+  payment_method: string | null;
+  payment_status: PaymentStatus;
+  discount_amount: number;
+  number_of_rooms: number;
+  special_request: string | null;
+  number_of_adults: number;
+  payment_reference: string | null;
+  number_of_children: number;
+  reservation_number: string;
+  reservation_status: ReservationStatus;
 }
 
 export interface GalleryItem {
