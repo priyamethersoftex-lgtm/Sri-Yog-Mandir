@@ -5,11 +5,12 @@ import { roomService } from '../../services/roomService';
 import { roomTypeService, RoomType } from '../../services/roomTypeService';
 import { bedTypeService, BedType } from '../../services/bedTypeService';
 import { roomViewService, RoomView } from '../../services/roomViewService';
+import { amenityService, Amenity } from '../../services/amenityService';
 import { Button } from '../../components/ui/Button';
 import { FormField } from '../../components/forms/FormField';
 import { LoadingState } from '../../components/data/LoadingState';
 import { toast } from 'sonner';
-import { ArrowLeft, Save, AlertTriangle, Lock, ImageIcon, Star, Trash2, Plus } from 'lucide-react';
+import { ArrowLeft, Save, AlertTriangle, Lock, ImageIcon, Star, Trash2, Plus, Check } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { ConfirmationDialog } from '../../components/ui/ConfirmationDialog';
 import { PageContainer } from '../../components/ui/PageContainer';
@@ -30,6 +31,8 @@ export default function RoomEdit() {
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([]);
   const [bedTypes, setBedTypes] = useState<BedType[]>([]);
   const [roomViews, setRoomViews] = useState<RoomView[]>([]);
+  const [allAmenities, setAllAmenities] = useState<Amenity[]>([]);
+  const [assignedAmenityIds, setAssignedAmenityIds] = useState<number[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -48,18 +51,27 @@ export default function RoomEdit() {
     async function loadData() {
       if (!roomId) return;
       try {
-        const [rData, imgs, rTypes, bTypes, rViews] = await Promise.all([
+        const [rData, imgs, rTypes, bTypes, rViews, allAms] = await Promise.all([
           roomService.getRoomById(roomId),
           roomService.getRoomImages(roomId).catch(() => []),
           roomTypeService.getRoomTypes(null),
           bedTypeService.getBedTypes(null),
-          roomViewService.getRoomViews(null)
+          roomViewService.getRoomViews(null),
+          amenityService.getAmenities(true) // Get only active amenities
         ]);
         setRoom(rData);
         setImages(imgs);
         setRoomTypes(rTypes);
         setBedTypes(bTypes);
         setRoomViews(rViews);
+        setAllAmenities(allAms);
+        
+        // Setup assigned amenities
+        if (rData.amenities && Array.isArray(rData.amenities)) {
+          setAssignedAmenityIds(rData.amenities.map((a: any) => a.id));
+        } else {
+          setAssignedAmenityIds([]);
+        }
       } catch (error) {
         toast.error('Failed to load room data');
         navigate('/rooms');
@@ -69,6 +81,23 @@ export default function RoomEdit() {
     }
     loadData();
   }, [roomId, navigate]);
+
+  const toggleAmenity = async (amenityId: number) => {
+    const isAssigned = assignedAmenityIds.includes(amenityId);
+    try {
+      if (isAssigned) {
+        await roomService.removeAmenity(roomId, amenityId);
+        setAssignedAmenityIds(prev => prev.filter(id => id !== amenityId));
+        toast.success('Amenity removed');
+      } else {
+        await roomService.assignAmenity(roomId, amenityId);
+        setAssignedAmenityIds(prev => [...prev, amenityId]);
+        toast.success('Amenity assigned');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update amenity');
+    }
+  };
 
   const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -337,9 +366,47 @@ export default function RoomEdit() {
           </form>
         </div>
 
-        {/* Right Column: Images & Status */}
+        {/* Right Column: Images, Amenities & Status */}
         <div className="xl:col-span-1 space-y-6">
           
+          {/* Amenities Section */}
+          <Card>
+            <CardHeader className="bg-surface-muted/50 border-b border-border py-4">
+              <CardTitle className="text-[15px]">Room Amenities</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4 max-h-[300px] overflow-y-auto custom-scrollbar">
+              {allAmenities.length === 0 ? (
+                <p className="text-sm text-text-secondary">No amenities available.</p>
+              ) : (
+                <div className="space-y-2">
+                  {allAmenities.map(amenity => {
+                    const isAssigned = assignedAmenityIds.includes(amenity.id);
+                    return (
+                      <div 
+                        key={amenity.id}
+                        onClick={() => toggleAmenity(amenity.id)}
+                        className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                          isAssigned 
+                            ? 'border-primary/50 bg-primary/5' 
+                            : 'border-border bg-surface hover:border-primary/30 hover:bg-surface-muted'
+                        }`}
+                      >
+                        <div className={`w-5 h-5 rounded flex items-center justify-center border ${
+                          isAssigned ? 'bg-primary border-primary text-white' : 'border-text-muted bg-surface'
+                        }`}>
+                          {isAssigned && <Check size={14} strokeWidth={3} />}
+                        </div>
+                        <span className={`text-[14px] font-medium ${isAssigned ? 'text-primary' : 'text-text'}`}>
+                          {amenity.name}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           {/* Images Section */}
           <Card>
             <CardHeader className="bg-surface-muted/50 border-b border-border py-4 flex flex-row items-center justify-between">

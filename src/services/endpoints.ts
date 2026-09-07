@@ -60,6 +60,8 @@ export const ENDPOINTS = {
     GET: '/admin/room/roomget',
     CREATE: '/admin/room/roomcreate',
     UPDATE: '/admin/room/roomupdate',
+    AMENITY_ASSIGN: '/admin/room/roomamenityassign',
+    AMENITY_REMOVE: '/admin/room/roomamenityremove',
   },
   ROOM_IMAGE: {
     GET: '/admin/room/roomimageget',

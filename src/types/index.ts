@@ -33,6 +33,7 @@ export interface Room {
   is_active: number;
   status: string; // "AVAILABLE" etc
   primary_image?: string | null;
+  amenities?: any[] | null;
 }
 
 export interface RoomImage {

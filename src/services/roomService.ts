@@ -178,5 +178,40 @@ export const roomService = {
       }
       throw error;
     }
+  },
+
+  assignAmenity: async (roomId: number, amenityId: number) => {
+    try {
+      const response: any = await axiosInstance.post(ENDPOINTS.ROOM.AMENITY_ASSIGN, {
+        room_id: roomId,
+        amenity_id: amenityId
+      });
+      if (response.Success) {
+        return response;
+      }
+      throw new Error(response.Message || 'Failed to assign amenity');
+    } catch (error: any) {
+      if (error.response?.data?.Message) {
+        throw new Error(error.response.data.Message);
+      }
+      throw error;
+    }
+  },
+
+  removeAmenity: async (roomId: number, amenityId: number) => {
+    try {
+      const response: any = await axiosInstance.delete(ENDPOINTS.ROOM.AMENITY_REMOVE, {
+        data: { room_id: roomId, amenity_id: amenityId }
+      });
+      if (response.Success) {
+        return response;
+      }
+      throw new Error(response.Message || 'Failed to remove amenity');
+    } catch (error: any) {
+      if (error.response?.data?.Message) {
+        throw new Error(error.response.data.Message);
+      }
+      throw error;
+    }
   }
 };
