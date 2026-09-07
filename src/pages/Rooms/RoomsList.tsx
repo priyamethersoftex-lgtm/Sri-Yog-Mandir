@@ -1,53 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Room, RoomStatus } from '../../types';
+import { Room } from '../../types';
 import { roomService } from '../../services/roomService';
-import { reservationService } from '../../services/reservationService';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { LoadingState } from '../../components/data/LoadingState';
 import { PageContainer } from '../../components/ui/PageContainer';
-import { Edit, Users, BedDouble } from 'lucide-react';
-
-interface RoomWithStatus extends Room {
-  currentStatus: RoomStatus;
-  guestName?: string;
-}
+import { imageOriginal } from '../../utils/ImgUrl';
+import { Edit, Users, BedDouble, Plus } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function RoomsList() {
-  const [rooms, setRooms] = useState<RoomWithStatus[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     async function loadRooms() {
       try {
-        const data = await roomService.getRooms();
-        const bookings = await reservationService.getBookings();
-        
-        const withStatus = await Promise.all(
-          data.map(async (room) => {
-            const status = await roomService.getRoomStatus(room.id);
-            let guestName;
-            
-            if (status === 'Occupied' || status === 'Reserved') {
-              const booking = bookings.find(b => 
-                b.stay.roomId === room.id && 
-                (b.status === 'Checked In' || b.status === 'Confirmed')
-              );
-              if (booking) guestName = booking.guest.fullName;
-            }
-
-            return {
-              ...room,
-              currentStatus: status,
-              guestName
-            };
-          })
-        );
-        setRooms(withStatus);
-      } catch (error) {
+        const data = await roomService.getRooms({ limit: 100 });
+        setRooms(data.list);
+      } catch (error: any) {
+        toast.error(error.message || 'Failed to load rooms');
         console.error('Failed to load rooms:', error);
       } finally {
         setIsLoading(false);
@@ -58,10 +33,10 @@ export default function RoomsList() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Available': return 'success';
-      case 'Occupied': return 'primary';
-      case 'Reserved': return 'warning';
-      case 'Maintenance': return 'danger';
+      case 'AVAILABLE': return 'success';
+      case 'OCCUPIED': return 'primary';
+      case 'RESERVED': return 'warning';
+      case 'MAINTENANCE': return 'danger';
       default: return 'default';
     }
   };
@@ -76,16 +51,21 @@ export default function RoomsList() {
         { label: 'Dashboard', href: '/dashboard' },
         { label: 'Rooms' }
       ]}
+      action={
+        <Button onClick={() => navigate('/rooms/new')} className="flex items-center gap-2 shadow-sm">
+          <Plus size={16} /> Add Room
+        </Button>
+      }
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-12">
         {rooms.map((room) => (
           <Card key={room.id} className="overflow-hidden flex flex-col group hover:border-primary hover:shadow-xl transition-all duration-300">
             {/* Image Header Area */}
             <div className="relative h-48 w-full bg-surface-muted overflow-hidden shrink-0">
-              {room.mainImage ? (
+              {room.primary_image ? (
                 <img 
-                  src={room.mainImage} 
-                  alt={room.name} 
+                  src={imageOriginal(room.primary_image)} 
+                  alt={room.name_en} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               ) : (
@@ -94,14 +74,19 @@ export default function RoomsList() {
                 </div>
               )}
               
-              <div className="absolute top-4 right-4">
-                <Badge variant={getStatusColor(room.currentStatus) as any} className="shadow-lg backdrop-blur-sm bg-surface/90">
-                  {room.currentStatus}
+              <div className="absolute top-4 right-4 flex flex-col gap-2 items-end">
+                <Badge variant={getStatusColor(room.status) as any} className="shadow-lg backdrop-blur-sm bg-surface/90">
+                  {room.status}
                 </Badge>
+                {room.is_active === 0 && (
+                  <Badge variant="danger" className="shadow-lg backdrop-blur-sm bg-surface/90">
+                    INACTIVE
+                  </Badge>
+                )}
               </div>
               <div className="absolute top-4 left-4">
                 <Badge variant="outline" className="bg-black/50 text-white border-white/20 backdrop-blur-md">
-                  {room.id}
+                  Room {room.room_number}
                 </Badge>
               </div>
             </div>
@@ -110,11 +95,11 @@ export default function RoomsList() {
             <CardContent className="p-5 flex-1 flex flex-col">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-[16px] font-bold text-text leading-tight">{room.name}</h3>
-                  <p className="text-[13px] text-text-secondary font-medium mt-1">{room.category}</p>
+                  <h3 className="text-[16px] font-bold text-text leading-tight">{room.name_en}</h3>
+                  <p className="text-[13px] text-text-secondary font-medium mt-1">{room.room_type || 'Uncategorized'}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-primary">₹{room.pricePerNight.toLocaleString('en-IN')}</p>
+                  <p className="text-lg font-bold text-primary">{room.currency} {room.base_price?.toLocaleString('en-IN')}</p>
                   <p className="text-[11px] text-text-secondary uppercase tracking-wider">Per Night</p>
                 </div>
               </div>
@@ -124,13 +109,13 @@ export default function RoomsList() {
                   <p className="text-[11px] text-text-secondary uppercase tracking-wider mb-1">Capacity</p>
                   <p className="text-[13px] font-medium text-text flex items-center gap-1.5">
                     <Users size={14} className="text-primary" />
-                    {room.capacity.adults} Adults, {room.capacity.children} Child
+                    {room.capacity_adults} Adults, {room.capacity_children} Child
                   </p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-text-secondary uppercase tracking-wider mb-1">Current Guest</p>
+                  <p className="text-[11px] text-text-secondary uppercase tracking-wider mb-1">Floor</p>
                   <p className="text-[13px] font-medium text-text truncate">
-                    {room.guestName ? room.guestName : <span className="text-text-secondary/50">None</span>}
+                    {room.floor || <span className="text-text-secondary/50">Not specified</span>}
                   </p>
                 </div>
               </div>
@@ -146,6 +131,16 @@ export default function RoomsList() {
           </Card>
         ))}
       </div>
+      {rooms.length === 0 && !isLoading && (
+        <div className="text-center py-20 bg-surface rounded-xl border border-dashed border-border mt-4">
+          <BedDouble className="mx-auto text-text-muted mb-3" size={48} />
+          <h3 className="text-lg font-bold text-text">No Rooms Found</h3>
+          <p className="text-text-secondary">Get started by adding a new room to your property.</p>
+          <Button onClick={() => navigate('/rooms/new')} className="mt-4 gap-2">
+            <Plus size={16} /> Add First Room
+          </Button>
+        </div>
+      )}
     </PageContainer>
   );
 }

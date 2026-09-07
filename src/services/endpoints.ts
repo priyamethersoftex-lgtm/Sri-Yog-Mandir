@@ -55,5 +55,17 @@ export const ENDPOINTS = {
     CREATE: '/admin/room/bedtypecreate',
     UPDATE: '/admin/room/bedtypeupdate',
     DELETE: '/admin/room/bedtypedelete',
+  },
+  ROOM: {
+    GET: '/admin/room/roomget',
+    CREATE: '/admin/room/roomcreate',
+    UPDATE: '/admin/room/roomupdate',
+  },
+  ROOM_IMAGE: {
+    GET: '/admin/room/roomimageget',
+    ADD: '/admin/room/roomimageadd',
+    UPDATE: '/admin/room/roomimageupdate',
+    SET_PRIMARY: '/admin/room/roomimagesetprimary',
+    DELETE: '/admin/room/roomimagedelete',
   }
 };

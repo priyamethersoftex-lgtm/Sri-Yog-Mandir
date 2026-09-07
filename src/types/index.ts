@@ -9,26 +9,40 @@ export interface RoomCapacity {
 }
 
 export interface Room {
-  id: string; // locked
-  name: string; // locked
-  nameHi: string;
-  category: RoomCategory;
-  pricePerNight: number;
-  originalPrice: number;
-  view: string;
-  floor: string;
-  bedType: string;
-  sizeSqFt: number;
-  capacity: RoomCapacity;
+  id: number;
+  uuid: string;
+  room_number: string;
+  slug: string;
+  name_en: string;
+  name_hi: string;
   tagline: string;
-  shortDescription: string;
+  short_description: string;
   description: string;
-  features: string[];
-  amenities: string[];
-  isPopular: boolean;
-  mainImage: string;
-  galleryImages: string[];
-  isMaintenance: boolean; // Controls highest priority maintenance status
+  room_type_id: number;
+  room_type?: string; // from API
+  capacity_adults: number;
+  capacity_children: number;
+  base_price: number;
+  original_price: number;
+  currency: string;
+  size_sq_ft: number;
+  bed_type_id: number;
+  view_id: number;
+  floor: string;
+  is_popular: number;
+  is_active: number;
+  status: string; // "AVAILABLE" etc
+  primary_image?: string | null;
+}
+
+export interface RoomImage {
+  id: number;
+  uuid?: string;
+  room_id: number;
+  image_url: string;
+  alt_text: string;
+  is_primary: number | boolean;
+  sort_order?: number;
 }
 
 export interface Guest {

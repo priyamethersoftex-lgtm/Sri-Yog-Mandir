@@ -4,6 +4,7 @@ import { ProtectedRoute } from './ProtectedRoute';
 import AdminLayout from '../components/layout/AdminLayout';
 
 import RoomsList from '../pages/Rooms/RoomsList';
+import NewRoom from '../pages/Rooms/NewRoom';
 import RoomEdit from '../pages/Rooms/RoomEdit';
 import RoomTypes from '../pages/Rooms/RoomTypes';
 import RoomViews from '../pages/Rooms/RoomViews';
@@ -38,6 +39,7 @@ export function AppRoutes() {
           <Route path="/reservations/:id" element={<ReservationDetails />} />
           
           <Route path="/rooms" element={<RoomsList />} />
+          <Route path="/rooms/new" element={<NewRoom />} />
           <Route path="/rooms/types" element={<RoomTypes />} />
           <Route path="/rooms/views" element={<RoomViews />} />
           <Route path="/rooms/beds" element={<BedTypes />} />
