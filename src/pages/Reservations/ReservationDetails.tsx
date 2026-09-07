@@ -44,10 +44,18 @@ export default function ReservationDetails() {
     if (!reservation) return;
     setIsProcessing(true);
     try {
-      // NOTE: Status update API is not yet available as per current endpoint list.
-      // We will simulate success or show an error for now.
-      toast.info('Update status API is not yet integrated. Action simulated.');
+      let targetStatus = '';
+      switch (actionModal.type) {
+        case 'cancel': targetStatus = 'CANCELLED'; break;
+        case 'confirm': targetStatus = 'CONFIRMED'; break;
+        case 'checkIn': targetStatus = 'CHECKED_IN'; break;
+        case 'checkOut': targetStatus = 'CHECKED_OUT'; break;
+      }
+      
+      await reservationService.updateReservationStatus(reservation.id, targetStatus);
+      toast.success(`Reservation status updated to ${targetStatus}`);
       setActionModal({ ...actionModal, isOpen: false });
+      loadData();
     } catch (error: any) {
       toast.error(error.message || 'Failed to update status');
     } finally {

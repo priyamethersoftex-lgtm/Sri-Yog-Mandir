@@ -9,8 +9,11 @@ import { LoadingState } from '../../components/data/LoadingState';
 import { PageContainer } from '../../components/ui/PageContainer';
 import { Card, CardContent } from '../../components/ui/Card';
 import { parseISO, format } from 'date-fns';
-import { Plus } from 'lucide-react';
+import { Plus, Eye, Edit, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+
+import { EditReservationModal } from './EditReservationModal';
+import { StatusReservationModal } from './StatusReservationModal';
 
 const TABS = ['All', 'PENDING', 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'CANCELLED'];
 const TAB_LABELS: Record<string, string> = {
@@ -32,7 +35,21 @@ export default function ReservationsList() {
   const [pageSize] = useState(20);
   const [totalRecords, setTotalRecords] = useState(0);
 
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
+
   const navigate = useNavigate();
+
+  const openEditModal = (reservation: Reservation) => {
+    setSelectedReservation(reservation);
+    setEditModalOpen(true);
+  };
+
+  const openStatusModal = (reservation: Reservation) => {
+    setSelectedReservation(reservation);
+    setStatusModalOpen(true);
+  };
 
   useEffect(() => {
     fetchReservations();
@@ -159,13 +176,33 @@ export default function ReservationsList() {
                 cell: (r) => <Badge variant={getStatusColor(r.reservation_status) as any}>{r.reservation_status}</Badge>
               },
               {
-                header: '',
+                header: 'ACTIONS',
                 cell: (r) => (
-                  <Button variant="outline" size="sm" onClick={() => navigate(`/reservations/${r.id}`)}>
-                    View
-                  </Button>
+                  <div className="flex justify-end items-center gap-2">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); navigate(`/reservations/${r.id}`); }}
+                      className="p-1.5 text-secondary hover:text-primary hover:bg-surface rounded transition-colors"
+                      title="View Details"
+                    >
+                      <Eye size={18} />
+                    </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); openEditModal(r); }}
+                      className="p-1.5 text-secondary hover:text-brand-600 hover:bg-brand-50 rounded transition-colors"
+                      title="Edit Reservation"
+                    >
+                      <Edit size={18} />
+                    </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); openStatusModal(r); }}
+                      className="p-1.5 text-secondary hover:text-semantic-info hover:bg-semantic-info/10 rounded transition-colors"
+                      title="Update Status"
+                    >
+                      <RefreshCw size={18} />
+                    </button>
+                  </div>
                 ),
-                className: 'text-right'
+                className: 'text-right w-[120px]'
               }
             ]}
           />
@@ -197,12 +234,23 @@ export default function ReservationsList() {
                     <span>{r.total_guests} Guests</span>
                   </div>
                   
-                  <div className="flex justify-between items-end text-[13px] mt-2">
+                  <div className="flex justify-between items-end text-[13px] mt-2 border-t border-border pt-3">
                     <div className="text-secondary font-medium">
                       <p>{format(parseISO(r.check_in), 'dd MMM')} - {format(parseISO(r.check_out), 'dd MMM')}</p>
                     </div>
-                    <div className="font-bold text-[15px] text-primary">
-                      ₹{r.total_amount.toLocaleString('en-IN')}
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); openEditModal(r); }}
+                        className="p-1.5 text-secondary hover:text-brand-600 bg-surface rounded transition-colors"
+                      >
+                        <Edit size={16} />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); openStatusModal(r); }}
+                        className="p-1.5 text-secondary hover:text-semantic-info bg-surface rounded transition-colors"
+                      >
+                        <RefreshCw size={16} />
+                      </button>
                     </div>
                   </div>
                 </CardContent>
@@ -218,6 +266,19 @@ export default function ReservationsList() {
           </div>
         </div>
       </div>
+
+      <EditReservationModal 
+        isOpen={editModalOpen} 
+        onClose={() => { setEditModalOpen(false); setSelectedReservation(null); }} 
+        reservation={selectedReservation} 
+        onSuccess={fetchReservations} 
+      />
+      <StatusReservationModal 
+        isOpen={statusModalOpen} 
+        onClose={() => { setStatusModalOpen(false); setSelectedReservation(null); }} 
+        reservation={selectedReservation} 
+        onSuccess={fetchReservations} 
+      />
     </PageContainer>
   );
 }

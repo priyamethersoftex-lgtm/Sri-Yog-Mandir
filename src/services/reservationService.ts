@@ -91,5 +91,50 @@ export const reservationService = {
       }
       throw error;
     }
+  },
+
+  updateReservationStatus: async (id: number, status: string): Promise<any> => {
+    try {
+      const response: any = await axiosInstance.put(ENDPOINTS.RESERVATION.UPDATE_STATUS, {
+        id,
+        status
+      });
+      if (response.Success) {
+        return response;
+      }
+      throw new Error(response.Message || 'Failed to update reservation status');
+    } catch (error: any) {
+      if (error.response?.data?.Message) {
+        throw new Error(error.response.data.Message);
+      }
+      throw error;
+    }
+  },
+
+  updateReservation: async (payload: {
+    id: number;
+    room_id: number;
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+    check_in: string;
+    check_out: string;
+    number_of_adults: number;
+    number_of_children: number;
+    number_of_rooms: number;
+    special_request: string;
+  }): Promise<any> => {
+    try {
+      const response: any = await axiosInstance.put(ENDPOINTS.RESERVATION.UPDATE, payload);
+      if (response.Success) {
+        return response;
+      }
+      throw new Error(response.Message || 'Failed to update reservation');
+    } catch (error: any) {
+      if (error.response?.data?.Message) {
+        throw new Error(error.response.data.Message);
+      }
+      throw error;
+    }
   }
 };
