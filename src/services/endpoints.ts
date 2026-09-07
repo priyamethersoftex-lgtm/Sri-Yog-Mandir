@@ -28,5 +28,8 @@ export const ENDPOINTS = {
     UPDATE: '/admin/gallery/galleryupdate',
     UPDATE_STATUS: '/admin/gallery/galleryupdatestatus',
     DELETE: '/admin/gallery/gallerydelete',
+  },
+  INQUIRY: {
+    GET: '/admin/inquiry/inquiryget',
   }
 };

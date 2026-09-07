@@ -43,6 +43,7 @@ const NAV_ITEMS = [
     icon: <Settings size={17} />,
     subItems: [
       { label: "Administrator", to: "/settings/administrator" },
+      { label: "Enquiry", to: "/settings/enquiry" },
     ],
   },
 ];
