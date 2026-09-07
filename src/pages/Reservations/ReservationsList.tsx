@@ -121,8 +121,19 @@ export default function ReservationsList() {
                     </div>
                     <div>
                       <p className="font-extrabold text-brand-dark text-[13px] uppercase tracking-wide">{r.customer_name}</p>
-                      <p className="text-[11px] text-text-muted mt-0.5 tracking-wider font-medium">{r.reservation_number}</p>
+                      <p className="text-[11px] text-text-muted mt-0.5 tracking-wider font-medium">
+                        {r.reservation_number} <span className="mx-1">•</span> {r.customer_phone || 'No Phone'}
+                      </p>
                     </div>
+                  </div>
+                )
+              },
+              {
+                header: 'ROOM',
+                cell: (r) => (
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[13px] font-bold text-text">{r.room_name || 'N/A'}</span>
+                    <span className="text-[11px] text-text-muted font-medium">{r.total_guests} Guests</span>
                   </div>
                 )
               },
@@ -172,10 +183,18 @@ export default function ReservationsList() {
                 <CardContent className="p-4 flex flex-col gap-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="font-bold text-brand-500">{r.reservation_number}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-brand-500 text-[13px]">{r.reservation_number}</span>
+                      </div>
                       <h3 className="font-bold text-primary text-[15px] mt-0.5">{r.customer_name}</h3>
+                      <p className="text-[12px] text-text-secondary mt-0.5">{r.customer_phone || 'No Phone'}</p>
                     </div>
                     <Badge variant={getStatusColor(r.reservation_status) as any}>{r.reservation_status}</Badge>
+                  </div>
+                  
+                  <div className="flex justify-between items-center text-[12px] text-text-secondary bg-surface-muted p-2 rounded-lg mt-1">
+                    <span className="font-semibold text-text">{r.room_name || 'N/A'}</span>
+                    <span>{r.total_guests} Guests</span>
                   </div>
                   
                   <div className="flex justify-between items-end text-[13px] mt-2">
