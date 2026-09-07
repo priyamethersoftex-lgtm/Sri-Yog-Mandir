@@ -6,6 +6,8 @@ import AdminLayout from '../components/layout/AdminLayout';
 import RoomsList from '../pages/Rooms/RoomsList';
 import RoomEdit from '../pages/Rooms/RoomEdit';
 import RoomTypes from '../pages/Rooms/RoomTypes';
+import RoomViews from '../pages/Rooms/RoomViews';
+import BedTypes from '../pages/Rooms/BedTypes';
 import ReservationsList from '../pages/Reservations/ReservationsList';
 import NewReservation from '../pages/Reservations/NewReservation';
 import ReservationDetails from '../pages/Reservations/ReservationDetails';
@@ -37,6 +39,8 @@ export function AppRoutes() {
           
           <Route path="/rooms" element={<RoomsList />} />
           <Route path="/rooms/types" element={<RoomTypes />} />
+          <Route path="/rooms/views" element={<RoomViews />} />
+          <Route path="/rooms/beds" element={<BedTypes />} />
           <Route path="/rooms/:id/edit" element={<RoomEdit />} />
           
           <Route path="/gallery" element={<GalleryList />} />

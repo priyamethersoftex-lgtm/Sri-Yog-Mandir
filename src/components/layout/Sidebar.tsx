@@ -28,6 +28,8 @@ const NAV_ITEMS = [
     subItems: [
       { label: "All Rooms", to: "/rooms" },
       { label: "Room Types", to: "/rooms/types" },
+      { label: "Room Views", to: "/rooms/views" },
+      { label: "Bed Types", to: "/rooms/beds" },
     ],
   },
   {
