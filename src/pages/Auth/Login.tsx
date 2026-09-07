@@ -28,7 +28,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex w-full overflow-hidden bg-white">
+    <div className="min-h-screen flex w-full overflow-hidden" style={{ background: 'var(--color-background)' }}>
 
       {/* ═══════════════════════════════════
           LEFT PANEL — Property Image & Brand
@@ -133,7 +133,7 @@ export default function Login() {
           ═══════════════════════════════════ */}
       <div
         className="flex-1 flex flex-col min-h-screen overflow-y-auto"
-        style={{ background: '#ffffff' }}
+        style={{ background: 'var(--color-surface)' }}
       >
         {/* Subtle top accent stripe */}
         <div
@@ -161,12 +161,14 @@ export default function Login() {
                 />
               </div>
               <h1
-                className="text-[24px] font-bold tracking-tight text-slate-900"
+                className="text-[24px] font-bold tracking-tight"
+                style={{ color: 'var(--color-text)' }}
               >
                 Sri Yoga Mandir
               </h1>
               <p
-                className="text-[11px] font-bold tracking-[0.15em] uppercase mt-1 text-slate-500"
+                className="text-[11px] font-bold tracking-[0.15em] uppercase mt-1"
+                style={{ color: 'var(--color-text-muted)' }}
               >
                 Property Management System
               </p>
@@ -175,12 +177,14 @@ export default function Login() {
             {/* ── Heading ── */}
             <div className="mb-[36px]">
               <h2
-                className="text-[30px] font-bold tracking-tight text-slate-900 leading-tight"
+                className="text-[30px] font-bold tracking-tight leading-tight"
+                style={{ color: 'var(--color-text)' }}
               >
                 Welcome back
               </h2>
               <p
-                className="text-[15px] mt-2 font-medium text-slate-500"
+                className="text-[15px] mt-2 font-medium"
+                style={{ color: 'var(--color-text-secondary)' }}
               >
                 Sign in to manage your property.
               </p>
@@ -237,7 +241,8 @@ export default function Login() {
         {/* ── Footer ── */}
         <div className="flex-shrink-0 text-center px-6 pb-[24px]">
           <p
-            className="text-[12px] font-medium text-slate-400"
+            className="text-[12px] font-medium"
+            style={{ color: 'var(--color-text-muted)' }}
           >
             Sri Yoga Mandir &nbsp;•&nbsp; Property Management System
           </p>
