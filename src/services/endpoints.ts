@@ -31,5 +31,17 @@ export const ENDPOINTS = {
   },
   INQUIRY: {
     GET: '/admin/inquiry/inquiryget',
+  },
+  AMENITY: {
+    GET: '/admin/amenity/amenitylist',
+    CREATE: '/admin/amenity/amenitycreate',
+    UPDATE: '/admin/amenity/amenityupdate',
+    DELETE: '/admin/amenity/amenitydelete',
+  },
+  ROOM_TYPE: {
+    GET: '/admin/room/roomtypelist',
+    CREATE: '/admin/room/roomtypecreate',
+    UPDATE: '/admin/room/roomtypeupdate',
+    DELETE: '/admin/room/roomtypedelete',
   }
 };

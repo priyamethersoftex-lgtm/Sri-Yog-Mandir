@@ -24,8 +24,11 @@ const NAV_ITEMS = [
   },
   {
     label: "Rooms",
-    to: "/rooms",
     icon: <BedDouble size={17} />,
+    subItems: [
+      { label: "All Rooms", to: "/rooms" },
+      { label: "Room Types", to: "/rooms/types" },
+    ],
   },
   {
     label: "Gallery",
@@ -42,8 +45,9 @@ const NAV_ITEMS = [
     label: "Settings",
     icon: <Settings size={17} />,
     subItems: [
-      { label: "Administrator", to: "/settings/administrator" },
+      { label: "Amenities", to: "/settings/amenities" },
       { label: "Enquiry", to: "/settings/enquiry" },
+      { label: "Administrator", to: "/settings/administrator" }
     ],
   },
 ];
