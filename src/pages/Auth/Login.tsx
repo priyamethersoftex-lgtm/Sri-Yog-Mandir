@@ -28,98 +28,99 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex w-full overflow-hidden" style={{ background: 'var(--color-background)' }}>
+    <div className="min-h-screen flex w-full overflow-hidden bg-white">
 
       {/* ═══════════════════════════════════
           LEFT PANEL — Property Image & Brand
           ═══════════════════════════════════ */}
       <div
-        className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative overflow-hidden flex-shrink-0"
+        className="hidden lg:flex lg:w-[52%] relative overflow-hidden flex-shrink-0"
         aria-hidden="true"
       >
-        {/* Property image — object-position tuned to show building facade */}
+        {/* Property image — brightened and positioned */}
         <img
           src={mainImage}
           alt="Sri Yoga Mandir property"
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: 'center 30%' }}
+          style={{ 
+            objectPosition: 'center 30%',
+            filter: 'brightness(1.15)' 
+          }}
         />
 
-        {/* Layered gradient overlay: stronger at top for text legibility */}
+        {/* Subtle, elegant gradient overlay */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(to bottom, rgba(10,5,18,0.88) 0%, rgba(10,5,18,0.60) 25%, rgba(10,5,18,0.25) 60%, rgba(10,5,18,0.15) 100%)',
+              'linear-gradient(to bottom, rgba(10,5,18,0.20) 0%, rgba(10,5,18,0.45) 50%, rgba(10,5,18,0.85) 100%)',
           }}
         />
 
-        {/* Brand block — top-left, generous padding */}
-        <div className="relative z-10 flex flex-col justify-start w-full h-full p-10 xl:p-14 pt-14 xl:pt-16">
-          {/* Logo + name row */}
-          <div className="flex items-center gap-4 mb-5">
+        {/* Brand block — grouped vertically, balanced padding */}
+        <div className="relative z-10 flex flex-col w-full h-full p-12 xl:p-16">
+          
+          <div className="mt-8 xl:mt-12 flex flex-col items-start">
+            {/* Logo */}
             <div
-              className="w-[72px] h-[72px] xl:w-[80px] xl:h-[80px] rounded-2xl flex items-center justify-center flex-shrink-0"
+              className="w-[76px] h-[76px] rounded-2xl flex items-center justify-center mb-6"
               style={{
-                background: 'rgba(255,255,255,0.10)',
-                border: '1px solid rgba(255,255,255,0.20)',
-                backdropFilter: 'blur(8px)',
+                background: 'rgba(255,255,255,0.12)',
+                border: '1px solid rgba(255,255,255,0.25)',
+                backdropFilter: 'blur(10px)',
               }}
             >
               <img
                 src={yogaMandirLogo}
                 alt="Sri Yoga Mandir Logo"
-                className="w-full h-full object-contain p-2 drop-shadow-lg"
+                className="w-full h-full object-contain p-2 drop-shadow-md"
               />
             </div>
-            <div>
-              <p
-                className="text-[11px] font-bold tracking-[0.18em] uppercase mb-1"
-                style={{ color: 'rgba(245,130,32,0.85)' }}
-              >
-                Official Portal
-              </p>
-              <h1
-                className="text-[26px] xl:text-[30px] font-bold leading-tight text-white tracking-tight"
-                style={{ textShadow: '0 2px 12px rgba(0,0,0,0.4)' }}
-              >
-                Sri Yoga Mandir
-              </h1>
-            </div>
+
+            {/* Typography Group */}
+            <p
+              className="text-[11px] font-bold tracking-[0.2em] uppercase mb-1.5"
+              style={{ color: 'var(--color-primary)' }}
+            >
+              Official Portal
+            </p>
+            
+            <h1
+              className="text-[32px] xl:text-[36px] font-bold leading-tight text-white tracking-tight mb-4"
+              style={{ textShadow: '0 2px 16px rgba(0,0,0,0.4)' }}
+            >
+              Sri Yoga Mandir
+            </h1>
+
+            {/* Divider */}
+            <div
+              className="w-12 h-[3px] rounded-full mb-4"
+              style={{ background: 'var(--color-primary)' }}
+            />
+
+            <p
+              className="text-[13px] font-semibold tracking-[0.14em] uppercase mb-2"
+              style={{ color: 'rgba(255,255,255,0.7)' }}
+            >
+              Property Management System
+            </p>
+
+            <p
+              className="text-[18px] xl:text-[20px] font-medium leading-relaxed mt-2 max-w-md"
+              style={{ color: 'rgba(255,255,255,0.95)', textShadow: '0 1px 8px rgba(0,0,0,0.4)' }}
+            >
+              Your peaceful retreat by the Ganges.
+            </p>
           </div>
 
-          {/* Divider */}
-          <div
-            className="mb-5 w-12 h-[2px] rounded-full"
-            style={{ background: 'rgba(245,130,32,0.70)' }}
-          />
-
-          {/* Sub-label */}
-          <p
-            className="text-[13px] font-semibold tracking-[0.12em] uppercase mb-2"
-            style={{ color: 'rgba(255,255,255,0.55)' }}
-          >
-            Property Management System
-          </p>
-
-          {/* Tagline */}
-          <p
-            className="text-[18px] xl:text-[20px] font-light leading-relaxed max-w-sm"
-            style={{ color: 'rgba(255,255,255,0.85)', textShadow: '0 1px 6px rgba(0,0,0,0.3)' }}
-          >
-            Your peaceful retreat
-            <br />by the Ganges.
-          </p>
-
-          {/* Bottom attribution badge (Keep it at the bottom using mt-auto) */}
-          <div className="mt-auto flex items-center gap-2">
+          {/* Bottom location badge */}
+          <div className="mt-auto flex items-center gap-2.5 opacity-80">
             <span
               className="w-1.5 h-1.5 rounded-full inline-block"
-              style={{ background: 'rgba(245,130,32,0.75)' }}
+              style={{ background: 'var(--color-primary)' }}
             />
             <span
-              className="text-[11px] font-medium tracking-wide"
-              style={{ color: 'rgba(255,255,255,0.40)' }}
+              className="text-[12px] font-medium tracking-wide text-white"
             >
               Varanasi, Uttar Pradesh, India
             </span>
@@ -132,58 +133,54 @@ export default function Login() {
           ═══════════════════════════════════ */}
       <div
         className="flex-1 flex flex-col min-h-screen overflow-y-auto"
-        style={{ background: 'var(--color-surface)' }}
+        style={{ background: '#ffffff' }}
       >
-        {/* Thin top accent stripe */}
+        {/* Subtle top accent stripe */}
         <div
           className="h-1 w-full flex-shrink-0"
           style={{ background: 'var(--color-primary)' }}
         />
 
-        {/* Main scrollable content */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 sm:px-10 py-10">
-          <div className="w-full max-w-[400px]">
+        {/* Main scrollable content — perfectly centered form */}
+        <div className="flex-1 flex flex-col items-center justify-center px-8 sm:px-12 lg:px-16 py-12">
+          <div className="w-full max-w-[380px]">
 
             {/* ── Mobile-only brand header ── */}
             <div className="lg:hidden flex flex-col items-center text-center mb-10">
               <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
                 style={{
-                  background: 'rgba(245,130,32,0.08)',
-                  border: '1px solid rgba(245,130,32,0.20)',
+                  background: 'rgba(245,130,32,0.05)',
+                  border: '1px solid rgba(245,130,32,0.15)',
                 }}
               >
                 <img
                   src={yogaMandirLogo}
                   alt="Sri Yoga Mandir Logo"
-                  className="w-11 h-11 object-contain"
+                  className="w-10 h-10 object-contain"
                 />
               </div>
               <h1
-                className="text-[22px] font-bold tracking-tight"
-                style={{ color: 'var(--color-text)' }}
+                className="text-[24px] font-bold tracking-tight text-slate-900"
               >
                 Sri Yoga Mandir
               </h1>
               <p
-                className="text-[11px] font-semibold tracking-[0.14em] uppercase mt-1"
-                style={{ color: 'var(--color-text-muted)' }}
+                className="text-[11px] font-bold tracking-[0.15em] uppercase mt-1 text-slate-500"
               >
                 Property Management System
               </p>
             </div>
 
             {/* ── Heading ── */}
-            <div className="mb-8">
+            <div className="mb-[36px]">
               <h2
-                className="text-[28px] font-bold tracking-tight leading-tight"
-                style={{ color: 'var(--color-text)' }}
+                className="text-[30px] font-bold tracking-tight text-slate-900 leading-tight"
               >
                 Welcome back
               </h2>
               <p
-                className="text-[15px] mt-2 font-medium"
-                style={{ color: 'var(--color-text-muted)' }}
+                className="text-[15px] mt-2 font-medium text-slate-500"
               >
                 Sign in to manage your property.
               </p>
@@ -191,14 +188,14 @@ export default function Login() {
 
             {/* ── Form ── */}
             <form onSubmit={handleLogin} noValidate>
-              <div className="space-y-5">
+              <div className="space-y-[22px]">
                 <FormField
                   id="login-email"
                   label="Email Address"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
-                  placeholder="you@example.com"
+                  placeholder="Enter your email address"
                   autoComplete="email"
                   required
                 />
@@ -215,15 +212,16 @@ export default function Login() {
                 />
               </div>
 
-              <div className="mt-7">
+              <div className="mt-[28px]">
                 <Button
                   id="login-submit"
                   type="submit"
-                  className="w-full text-[15px] font-bold"
+                  className="w-full text-[15px] font-bold transition-colors duration-200"
                   style={{
                     height: '48px',
                     borderRadius: '10px',
-                    letterSpacing: '0.02em',
+                    letterSpacing: '0.01em',
+                    boxShadow: '0 2px 8px rgba(245,130,32,0.15)',
                   }}
                   isLoading={isLoggingIn}
                   disabled={isLoggingIn}
@@ -237,15 +235,11 @@ export default function Login() {
         </div>
 
         {/* ── Footer ── */}
-        <div
-          className="flex-shrink-0 text-center px-6 py-5"
-          style={{ borderTop: '1px solid var(--color-border)' }}
-        >
+        <div className="flex-shrink-0 text-center px-6 pb-[24px]">
           <p
-            className="text-[12px] font-medium"
-            style={{ color: 'var(--color-text-muted)' }}
+            className="text-[12px] font-medium text-slate-400"
           >
-            © {new Date().getFullYear()} Sri Yoga Mandir &nbsp;·&nbsp; Property Management System
+            Sri Yoga Mandir &nbsp;•&nbsp; Property Management System
           </p>
         </div>
       </div>
