@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Booking } from '../../types';
+import { Reservation } from '../../types';
 import { reservationService } from '../../services/reservationService';
 import { DataTable } from '../../components/ui/DataTable';
 import { Badge } from '../../components/ui/Badge';
@@ -10,46 +10,64 @@ import { PageContainer } from '../../components/ui/PageContainer';
 import { Card, CardContent } from '../../components/ui/Card';
 import { parseISO, format } from 'date-fns';
 import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
 
-const TABS = ['All', 'Pending', 'Confirmed', 'Checked In', 'Checked Out', 'Cancelled'];
+const TABS = ['All', 'PENDING', 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'CANCELLED'];
+const TAB_LABELS: Record<string, string> = {
+  'All': 'All',
+  'PENDING': 'Pending',
+  'CONFIRMED': 'Confirmed',
+  'CHECKED_IN': 'Checked In',
+  'CHECKED_OUT': 'Checked Out',
+  'CANCELLED': 'Cancelled'
+};
 
 export default function ReservationsList() {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
   const [activeTab, setActiveTab] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalRecords, setTotalRecords] = useState(0);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function load() {
-      try {
-        const data = await reservationService.getBookings();
-        setBookings(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    load();
-  }, []);
+    fetchReservations();
+  }, [page, activeTab]);
 
-  const filteredBookings = useMemo(() => {
-    if (activeTab === 'All') return bookings;
-    return bookings.filter(b => b.status === activeTab);
-  }, [bookings, activeTab]);
+  const fetchReservations = async () => {
+    setIsLoading(true);
+    try {
+      const statusParam = activeTab === 'All' ? null : activeTab;
+      const data = await reservationService.getReservations({
+        page,
+        limit: pageSize,
+        reservation_status: statusParam
+      });
+      setReservations(data.list);
+      setTotalRecords(data.pagination.total);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to load reservations');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Pending': return 'warning';
-      case 'Confirmed': return 'info';
-      case 'Checked In': return 'success';
-      case 'Checked Out': return 'default';
-      case 'Cancelled': return 'danger';
+      case 'PENDING': return 'warning';
+      case 'CONFIRMED': return 'info';
+      case 'CHECKED_IN': return 'success';
+      case 'CHECKED_OUT': return 'default';
+      case 'CANCELLED': return 'danger';
       default: return 'default';
     }
   };
 
-  if (isLoading) return <LoadingState />;
+  if (isLoading && reservations.length === 0) return <LoadingState />;
 
   return (
     <PageContainer
@@ -71,14 +89,14 @@ export default function ReservationsList() {
           {TABS.map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => { setActiveTab(tab); setPage(1); }}
               className={`px-4 py-3 text-[14px] font-semibold tracking-wide whitespace-nowrap transition-colors border-b-2 outline-none ${
                 activeTab === tab
                   ? 'border-brand-500 text-brand-500'
                   : 'border-transparent text-secondary hover:text-primary hover:border-theme'
               }`}
             >
-              {tab}
+              {TAB_LABELS[tab]}
             </button>
           ))}
         </div>
@@ -86,50 +104,53 @@ export default function ReservationsList() {
         {/* Desktop Table */}
         <div className="hidden md:block">
           <DataTable
-            data={filteredBookings}
-            keyExtractor={(b) => b.id}
+            data={reservations}
+            keyExtractor={(r) => r.id.toString()}
+            loading={isLoading}
+            page={page}
+            pageSize={pageSize}
+            totalRecords={totalRecords}
+            onPageChange={setPage}
             columns={[
               {
                 header: 'GUEST INFO',
-                cell: (b) => (
+                cell: (r) => (
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-[15px] flex-shrink-0">
-                      {b.guest.fullName.charAt(0).toUpperCase()}
+                      {r.customer_name.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-extrabold text-brand-dark text-[13px] uppercase tracking-wide">{b.guest.fullName}</p>
-                      <p className="text-[11px] text-text-muted mt-0.5 tracking-wider font-medium">{b.id}</p>
-                      <p className="text-[11px] text-text-muted flex items-center gap-1 font-medium mt-0.5">
-                         <span className="text-[10px]">📞</span> {b.guest.phone}
-                      </p>
+                      <p className="font-extrabold text-brand-dark text-[13px] uppercase tracking-wide">{r.customer_name}</p>
+                      <p className="text-[11px] text-text-muted mt-0.5 tracking-wider font-medium">{r.reservation_number}</p>
                     </div>
                   </div>
                 )
               },
               {
                 header: 'DATES',
-                cell: (b) => (
-                  <div className="text-[13px] font-bold text-text flex items-center gap-1.5">
-                    <span className="text-[11px] opacity-70">📅</span> {format(parseISO(b.stay.checkIn), 'dd MMM yyyy')}
+                cell: (r) => (
+                  <div className="text-[13px] font-bold text-text flex flex-col gap-1">
+                    <span className="flex items-center gap-1.5"><span className="text-[11px] opacity-70">In:</span> {format(parseISO(r.check_in), 'dd MMM yyyy')}</span>
+                    <span className="flex items-center gap-1.5"><span className="text-[11px] opacity-70">Out:</span> {format(parseISO(r.check_out), 'dd MMM yyyy')}</span>
                   </div>
                 )
               },
               {
-                header: 'ROOM',
-                cell: (b) => <span className="text-[14px] font-medium text-text">{b.stay.roomId}</span>
+                header: 'AMOUNT',
+                cell: (r) => <span className="font-bold text-text">₹{r.total_amount.toLocaleString('en-IN')}</span>
               },
               {
-                header: 'AMOUNT',
-                cell: (b) => <span className="font-bold text-text">₹{b.totalAmount.toLocaleString('en-IN')}</span>
+                header: 'PAYMENT',
+                cell: (r) => <Badge variant={getStatusColor(r.payment_status) as any}>{r.payment_status}</Badge>
               },
               {
                 header: 'STATUS',
-                cell: (b) => <Badge variant={getStatusColor(b.status) as any}>{b.status}</Badge>
+                cell: (r) => <Badge variant={getStatusColor(r.reservation_status) as any}>{r.reservation_status}</Badge>
               },
               {
                 header: '',
-                cell: (b) => (
-                  <Button variant="outline" size="sm" onClick={() => navigate(`/reservations/${b.id}`)}>
+                cell: (r) => (
+                  <Button variant="outline" size="sm" onClick={() => navigate(`/reservations/${r.id}`)}>
                     View
                   </Button>
                 ),
@@ -141,35 +162,41 @@ export default function ReservationsList() {
         
         {/* Mobile Cards */}
         <div className="md:hidden p-4 space-y-4 bg-[var(--bg-app)]">
-          {filteredBookings.length === 0 ? (
+          {reservations.length === 0 ? (
             <div className="text-center text-secondary py-8 flex flex-col items-center">
               <p className="font-medium">No reservations found.</p>
             </div>
           ) : (
-            filteredBookings.map((booking) => (
-              <Card key={booking.id} className="cursor-pointer hover:-translate-y-1 transition-transform" onClick={() => navigate(`/reservations/${booking.id}`)}>
+            reservations.map((r) => (
+              <Card key={r.id} className="cursor-pointer hover:-translate-y-1 transition-transform" onClick={() => navigate(`/reservations/${r.id}`)}>
                 <CardContent className="p-4 flex flex-col gap-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="font-bold text-brand-500">{booking.id}</span>
-                      <h3 className="font-bold text-primary text-[15px] mt-0.5">{booking.guest.fullName}</h3>
+                      <span className="font-bold text-brand-500">{r.reservation_number}</span>
+                      <h3 className="font-bold text-primary text-[15px] mt-0.5">{r.customer_name}</h3>
                     </div>
-                    <Badge variant={getStatusColor(booking.status) as any}>{booking.status}</Badge>
+                    <Badge variant={getStatusColor(r.reservation_status) as any}>{r.reservation_status}</Badge>
                   </div>
                   
                   <div className="flex justify-between items-end text-[13px] mt-2">
                     <div className="text-secondary font-medium">
-                      <p>{format(parseISO(booking.stay.checkIn), 'dd MMM')} - {format(parseISO(booking.stay.checkOut), 'dd MMM')}</p>
-                      <p>Room: {booking.stay.roomId}</p>
+                      <p>{format(parseISO(r.check_in), 'dd MMM')} - {format(parseISO(r.check_out), 'dd MMM')}</p>
                     </div>
                     <div className="font-bold text-[15px] text-primary">
-                      ₹{booking.totalAmount.toLocaleString('en-IN')}
+                      ₹{r.total_amount.toLocaleString('en-IN')}
                     </div>
                   </div>
                 </CardContent>
               </Card>
             ))
           )}
+          
+          {/* Mobile Pagination Controls if needed */}
+          <div className="flex justify-between items-center mt-4">
+            <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Prev</Button>
+            <span className="text-sm font-medium text-text-muted">Page {page}</span>
+            <Button size="sm" variant="outline" disabled={reservations.length < pageSize} onClick={() => setPage(p => p + 1)}>Next</Button>
+          </div>
         </div>
       </div>
     </PageContainer>

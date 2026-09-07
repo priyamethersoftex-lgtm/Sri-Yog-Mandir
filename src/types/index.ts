@@ -72,6 +72,22 @@ export interface Booking {
   createdAt: string; // ISO datetime
 }
 
+export type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_OUT' | 'CANCELLED';
+export type PaymentStatus = 'PENDING' | 'PARTIAL' | 'COMPLETED' | 'REFUNDED';
+
+export interface Reservation {
+  id: number;
+  uuid: string;
+  reservation_number: string;
+  customer_name: string;
+  check_in: string;
+  check_out: string;
+  total_amount: number;
+  payment_status: PaymentStatus;
+  reservation_status: ReservationStatus;
+  created_at: string;
+}
+
 export interface GalleryItem {
   id: string;
   url: string;

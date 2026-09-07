@@ -1,103 +1,95 @@
-import { Booking, BookingStatus } from '../types';
-import { mockDb } from './mockDb';
-import { roomService } from './roomService';
-import { isBefore, isAfter, parseISO, startOfDay } from 'date-fns';
+import { axiosInstance } from './axiosInstance';
+import { ENDPOINTS } from './endpoints';
+import { Reservation } from '../types';
 
 export const reservationService = {
-  async getBookings(): Promise<Booking[]> {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return mockDb.getBookings();
-  },
+  getReservations: async (params: { page?: number, limit?: number, search?: string | null, reservation_status?: string | null } = {}): Promise<{ list: Reservation[], pagination: any }> => {
+    try {
+      const response: any = await axiosInstance.post(ENDPOINTS.RESERVATION.GET, {
+        id: null,
+        page: params.page || 1,
+        limit: params.limit || 20,
+        search: params.search || null,
+        reservation_status: params.reservation_status || null,
+      });
 
-  async getBooking(id: string): Promise<Booking> {
-    await new Promise(resolve => setTimeout(resolve, 200));
-    const booking = mockDb.getBooking(id);
-    if (!booking) throw new Error('Booking not found');
-    return booking;
-  },
-
-  async checkAvailability(roomId: string, checkIn: string, checkOut: string, excludeBookingId?: string): Promise<boolean> {
-    await new Promise(resolve => setTimeout(resolve, 100)); // Minimal delay for UX
-    const room = mockDb.getRoom(roomId);
-    if (!room || room.isMaintenance) return false;
-
-    const newIn = startOfDay(parseISO(checkIn));
-    const newOut = startOfDay(parseISO(checkOut));
-    
-    if (isBefore(newOut, newIn) || newIn.getTime() === newOut.getTime()) {
-      return false; // Invalid dates
-    }
-
-    const bookings = mockDb.getBookings().filter(b => 
-      b.stay.roomId === roomId &&
-      (b.status === 'Confirmed' || b.status === 'Checked In' || b.status === 'Pending') &&
-      b.id !== excludeBookingId
-    );
-
-    for (const b of bookings) {
-      const existingIn = startOfDay(parseISO(b.stay.checkIn));
-      const existingOut = startOfDay(parseISO(b.stay.checkOut));
-
-      // Overlap formula: (existingCheckIn < newCheckOut) AND (existingCheckOut > newCheckIn)
-      if (isBefore(existingIn, newOut) && isAfter(existingOut, newIn)) {
-        return false;
+      if (response.Success && response.Data && response.Data[0]) {
+        return {
+          list: response.Data[0].list || [],
+          pagination: response.Data[0].pagination
+        };
       }
+      throw new Error(response.Message || 'Failed to fetch reservations');
+    } catch (error: any) {
+      if (error.response?.data?.Message) {
+        throw new Error(error.response.data.Message);
+      }
+      throw error;
     }
-
-    return true;
   },
 
-  async createBooking(bookingData: Omit<Booking, 'id' | 'roomPriceAtBooking' | 'totalAmount' | 'createdAt'>): Promise<Booking> {
-    await new Promise(resolve => setTimeout(resolve, 600));
-    
-    const isAvailable = await this.checkAvailability(bookingData.stay.roomId, bookingData.stay.checkIn, bookingData.stay.checkOut);
-    if (!isAvailable) {
-      throw new Error('Room is no longer available for these dates.');
+  getReservationById: async (id: number): Promise<Reservation> => {
+    try {
+      const response: any = await axiosInstance.post(ENDPOINTS.RESERVATION.GET, {
+        id: id,
+        page: 1,
+        limit: 1,
+        search: null,
+        reservation_status: null
+      });
+
+      if (response.Success && response.Data) {
+        const data = response.Data;
+        
+        // Handle pagination structure
+        if (Array.isArray(data) && data[0] && data[0].list && Array.isArray(data[0].list)) {
+          if (data[0].list.length > 0) return data[0].list[0];
+        }
+        
+        // Handle direct array of objects
+        if (Array.isArray(data) && data.length > 0 && !data[0].list) {
+          return data[0]; 
+        }
+
+        // Handle single object
+        if (!Array.isArray(data) && typeof data === 'object' && data !== null) {
+          if (data.id) return data;
+        }
+      }
+      
+      throw new Error('Reservation not found');
+    } catch (error: any) {
+      if (error.response?.data?.Message) {
+        throw new Error(error.response.data.Message);
+      }
+      throw new Error(error.message || 'Network error');
     }
-
-    const room = mockDb.getRoom(bookingData.stay.roomId);
-    if (!room) throw new Error('Room not found');
-
-    const roomPriceAtBooking = room.pricePerNight;
-    const totalAmount = roomPriceAtBooking * bookingData.stay.nights;
-
-    const newBooking: Booking = {
-      ...bookingData,
-      id: `B-${Math.floor(1000 + Math.random() * 9000)}`,
-      roomPriceAtBooking,
-      totalAmount,
-      createdAt: new Date().toISOString()
-    };
-
-    mockDb.addBooking(newBooking);
-    return newBooking;
   },
 
-  async updateBooking(booking: Booking): Promise<Booking> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    mockDb.updateBooking(booking);
-    return booking;
-  },
-
-  async transitionStatus(id: string, newStatus: BookingStatus): Promise<Booking> {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    const booking = mockDb.getBooking(id);
-    if (!booking) throw new Error('Booking not found');
-
-    const validTransitions: Record<BookingStatus, BookingStatus[]> = {
-      'Pending': ['Confirmed', 'Cancelled'],
-      'Confirmed': ['Checked In', 'Cancelled'],
-      'Checked In': ['Checked Out'],
-      'Checked Out': [],
-      'Cancelled': []
-    };
-
-    if (!validTransitions[booking.status].includes(newStatus)) {
-      throw new Error(`Invalid status transition from ${booking.status} to ${newStatus}`);
+  createReservation: async (payload: {
+    p_inquiry_id: number | null;
+    room_id: number;
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+    check_in: string;
+    check_out: string;
+    number_of_adults: number;
+    number_of_children: number;
+    number_of_rooms: number;
+    special_request: string;
+  }): Promise<Reservation> => {
+    try {
+      const response: any = await axiosInstance.post(ENDPOINTS.RESERVATION.CREATE, payload);
+      if (response.Success) {
+        return response.Data[0];
+      }
+      throw new Error(response.Message || 'Failed to create reservation');
+    } catch (error: any) {
+      if (error.response?.data?.Message) {
+        throw new Error(error.response.data.Message);
+      }
+      throw error;
     }
-
-    booking.status = newStatus;
-    mockDb.updateBooking(booking);
-    return booking;
   }
 };

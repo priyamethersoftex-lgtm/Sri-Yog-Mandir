@@ -67,5 +67,9 @@ export const ENDPOINTS = {
     UPDATE: '/admin/room/roomimageupdate',
     SET_PRIMARY: '/admin/room/roomimagesetprimary',
     DELETE: '/admin/room/roomimagedelete',
+  },
+  RESERVATION: {
+    GET: '/admin/reservation/reservationget',
+    CREATE: '/admin/reservation/reservationcreate',
   }
 };
