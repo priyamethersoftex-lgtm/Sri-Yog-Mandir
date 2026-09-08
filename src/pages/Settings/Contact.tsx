@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageContainer } from '../../components/ui/PageContainer';
 import { DataTable } from '../../components/ui/DataTable';
 import { inquiryService, Inquiry } from '../../services/inquiryService';
@@ -7,6 +8,7 @@ import { Button } from '../../components/ui/Button';
 import { formatDate } from '../../utils/dateformatUtils';
 
 export default function Contact() {
+  const navigate = useNavigate();
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -50,6 +52,7 @@ export default function Contact() {
         <div>
           <div className="font-bold text-sm">{item.name}</div>
           <div className="text-xs text-text-muted mt-0.5">{item.email}</div>
+          {item.phone && <div className="text-xs text-text-muted mt-0.5">{item.phone}</div>}
         </div>
       )
     },
@@ -73,14 +76,25 @@ export default function Contact() {
     {
       header: 'Actions',
       cell: (item: Inquiry) => (
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={() => handleStatusUpdate(item.id, item.status)}
-          className={item.status === 'PENDING' ? 'text-text hover:text-semantic-success border-border' : 'text-text-secondary hover:text-brand-600 border-border'}
-        >
-          {item.status === 'PENDING' ? 'Mark as Closed' : 'Reopen'}
-        </Button>
+        <div className="flex items-center gap-2 justify-end">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => handleStatusUpdate(item.id, item.status)}
+            className={item.status === 'PENDING' ? 'text-text hover:text-semantic-success border-border' : 'text-text-secondary hover:text-brand-600 border-border'}
+          >
+            {item.status === 'PENDING' ? 'Mark as Closed' : 'Reopen'}
+          </Button>
+          {item.status !== 'CLOSED' && (
+            <Button 
+              variant="primary" 
+              size="sm"
+              onClick={() => navigate('/reservations/new', { state: { inquiry_id: item.id, name: item.name, email: item.email, phone: item.phone } })}
+            >
+              Book Room
+            </Button>
+          )}
+        </div>
       ),
       className: 'text-right'
     }

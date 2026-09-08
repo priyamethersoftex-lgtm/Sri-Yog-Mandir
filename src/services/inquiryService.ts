@@ -6,6 +6,7 @@ export interface Inquiry {
   name: string;
   uuid: string;
   email: string;
+  phone: string;
   status: string;
   subject: string;
   created_at: string;

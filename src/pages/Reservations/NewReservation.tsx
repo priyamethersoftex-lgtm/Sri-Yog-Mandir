@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -39,8 +39,10 @@ type FormData = z.infer<typeof formSchema>;
 
 export default function NewReservation() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [inquiryId, setInquiryId] = useState<number | null>(null);
 
   const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -58,6 +60,17 @@ export default function NewReservation() {
   const checkOut = watch('check_out');
   const selectedRoomId = watch('room_id');
   const numberOfRooms = watch('number_of_rooms') || 1;
+
+  useEffect(() => {
+    // If coming from Inquiry, prefill details
+    if (location.state) {
+      const { inquiry_id, name, email, phone } = location.state as any;
+      if (inquiry_id) setInquiryId(inquiry_id);
+      if (name) setValue('customer_name', name);
+      if (email) setValue('customer_email', email);
+      if (phone) setValue('customer_phone', phone);
+    }
+  }, [location.state, setValue]);
 
   useEffect(() => {
     async function loadRooms() {
@@ -82,7 +95,7 @@ export default function NewReservation() {
     setIsSubmitting(true);
     try {
       await reservationService.createReservation({
-        p_inquiry_id: null,
+        p_inquiry_id: inquiryId,
         room_id: data.room_id,
         customer_name: data.customer_name,
         customer_email: data.customer_email,
