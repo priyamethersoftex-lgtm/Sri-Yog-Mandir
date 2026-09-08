@@ -1,11 +1,24 @@
 import React from 'react';
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Area,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from 'recharts';
 import { PageContainer } from '../../components/ui/PageContainer';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { IndianRupee, BedDouble, CalendarDays, Key, TrendingUp, Users, ArrowDownToLine, Clock } from 'lucide-react';
 import { format } from 'date-fns';
-import { dashboardData } from './dashboardData';
+import { dashboardService, DashboardStats } from '../../services/dashboardService';
+import { toast } from 'sonner';
+import { LoadingState } from '../../components/data/LoadingState';
 
 const KPICard = ({ title, value, subtext, icon: Icon, colorClass, iconBgClass }: any) => (
   <Card padding="none" className="relative p-5 transition-all duration-300 group overflow-hidden bg-surface border border-border shadow-sm rounded-2xl h-[120px]">
@@ -49,98 +62,121 @@ const SectionHead = ({ icon: Icon, accentClass, iconBgClass, title, sub }: any) 
   </div>
 );
 
-// Custom SVG Chart component matching MCZEN's aesthetic
 const TrendChart = ({ data }: any) => {
-  const maxRev = Math.max(...data.map((d: any) => d.revenue), 1);
-  const maxBookings = Math.max(...data.map((d: any) => d.bookings), 1);
-  
   return (
-    <div className="h-[300px] w-full flex flex-col relative mt-4">
-      {/* Chart area */}
-      <div className="flex-1 flex items-end justify-between relative pt-6 pb-2">
-        {/* Horizontal grid lines */}
-        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <div key={i} className="w-full h-px border-t border-dashed border-border" />
-          ))}
-        </div>
-        
-        {/* Bars and Area simulation */}
-        <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+    <div className="h-[300px] w-full mt-4">
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposedChart data={data} margin={{ top: 20, right: 0, bottom: 0, left: 0 }}>
           <defs>
-            <linearGradient id="gradRev" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f97316" stopOpacity={0.45} />
-              <stop offset="100%" stopColor="#f97316" stopOpacity={0.02} />
+            <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#f97316" stopOpacity={0.4}/>
+              <stop offset="95%" stopColor="#f97316" stopOpacity={0.0}/>
             </linearGradient>
           </defs>
-          <path 
-            d={`M 0,100 ${data.map((d: any, i: number) => `L ${(i / (data.length - 1)) * 100},${100 - (d.revenue / maxRev) * 100}`).join(' ')} L 100,100 Z`}
-            fill="url(#gradRev)" 
-            vectorEffect="non-scaling-stroke"
-            transform="scale(1, 0.9) translate(0, 10)"
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" opacity={0.5} />
+          <XAxis 
+            dataKey="label" 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fontSize: 11, fill: '#6b7280', fontWeight: 600 }}
+            dy={10}
           />
-          <path 
-            d={`M 0,100 ${data.map((d: any, i: number) => `L ${(i / (data.length - 1)) * 100},${100 - (d.revenue / maxRev) * 100}`).join(' ')}`}
-            fill="none"
-            stroke="#f97316"
-            strokeWidth="2.5"
-            vectorEffect="non-scaling-stroke"
-            transform="scale(1, 0.9) translate(0, 10)"
+          <YAxis 
+            yAxisId="left" 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fontSize: 11, fill: '#6b7280', fontWeight: 600 }}
+            tickFormatter={(value) => `₹${value}`}
+            width={60}
           />
-        </svg>
-
-        {data.map((d: any, i: number) => {
-          const barHeight = (d.bookings / maxBookings) * 80; // Scale bookings relative to chart height
-          return (
-            <div key={i} className="relative z-10 flex flex-col items-center justify-end w-full h-full group">
-              <div 
-                className="w-1.5 md:w-2 bg-brand-dark/90 rounded-t-sm"
-                style={{ height: `${barHeight}%` }}
-              />
-            </div>
-          )
-        })}
-      </div>
-      
-      {/* X Axis Labels */}
-      <div className="flex justify-between items-center mt-2 px-2">
-        {data.map((d: any, i: number) => (
-          <span key={i} className="text-[10px] font-semibold text-text-muted">{d.label}</span>
-        ))}
-      </div>
-      
-      {/* Legend */}
-      <div className="flex items-center justify-center gap-4 mt-4 text-[11px] font-bold">
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-primary" />
-          <span className="text-text-secondary">Revenue</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-brand-dark" />
-          <span className="text-text-secondary">Bookings</span>
-        </div>
-      </div>
+          <YAxis 
+            yAxisId="right" 
+            orientation="right" 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fontSize: 11, fill: '#6b7280', fontWeight: 600 }}
+            width={40}
+          />
+          <Tooltip 
+            contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', padding: '8px 12px' }}
+            itemStyle={{ fontSize: '13px', fontWeight: 700 }}
+            labelStyle={{ fontSize: '12px', color: '#6b7280', fontWeight: 600, marginBottom: '4px' }}
+            formatter={(value: any, name: string) => [name === 'Revenue' ? `₹${value}` : value, name]}
+          />
+          <Legend 
+            wrapperStyle={{ fontSize: '12px', fontWeight: 600, paddingTop: '10px' }}
+            iconType="circle"
+          />
+          <Bar 
+            yAxisId="right" 
+            dataKey="bookings" 
+            name="Bookings" 
+            barSize={12} 
+            fill="#1e293b" 
+            radius={[4, 4, 0, 0]}
+          />
+          <Area 
+            yAxisId="left" 
+            type="monotone" 
+            dataKey="revenue" 
+            name="Revenue" 
+            stroke="#f97316" 
+            strokeWidth={3} 
+            fillOpacity={1} 
+            fill="url(#colorRevenue)" 
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
     </div>
   );
 };
 
 export default function Dashboard() {
-  const { 
-    revenue, occupancy, todaysBookings, availableRooms,
-    roomStatus, movements, reservationOverview,
-    roomTypeOccupancy, bookingTrend, recentReservations 
-  } = dashboardData;
+  const [data, setData] = React.useState<DashboardStats | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [fromDate, setFromDate] = React.useState<string>('');
+  const [toDate, setToDate] = React.useState<string>('');
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const stats = await dashboardService.getStats(fromDate || null, toDate || null);
+        setData(stats);
+      } catch (error: any) {
+        toast.error(error.message || 'Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [fromDate, toDate]);
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Confirmed': return <Badge variant="success" size="sm">{status}</Badge>;
-      case 'Checked In': return <Badge variant="primary" size="sm">{status}</Badge>;
-      case 'Pending': return <Badge variant="warning" size="sm">{status}</Badge>;
-      case 'Checked Out': return <Badge variant="default" size="sm">{status}</Badge>;
-      case 'Cancelled': return <Badge variant="danger" size="sm">{status}</Badge>;
+    const s = status.toUpperCase();
+    switch (s) {
+      case 'CONFIRMED': return <Badge variant="success" size="sm">{status}</Badge>;
+      case 'CHECKED_IN': 
+      case 'CHECKED IN': return <Badge variant="primary" size="sm">{status}</Badge>;
+      case 'PENDING': return <Badge variant="warning" size="sm">{status}</Badge>;
+      case 'CHECKED_OUT': 
+      case 'CHECKED OUT': return <Badge variant="default" size="sm">{status}</Badge>;
+      case 'CANCELLED': return <Badge variant="danger" size="sm">{status}</Badge>;
       default: return <Badge variant="default" size="sm">{status}</Badge>;
     }
   };
+
+  if (loading || !data) {
+    return <LoadingState />;
+  }
+
+  const occupancyRate = data.rooms.total > 0 ? Math.round((data.rooms.occupied / data.rooms.total) * 100) : 0;
+  
+  const bookingTrend = data.trend.map(t => ({
+    label: format(new Date(t.date), 'dd MMM'),
+    revenue: t.revenue,
+    bookings: t.bookings
+  }));
 
   return (
     <PageContainer
@@ -148,11 +184,26 @@ export default function Dashboard() {
       description="Real-time operational overview of Sri Yoga Mandir"
       action={
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-surface border border-border rounded-lg text-[12px] font-bold text-text-secondary">
-            <CalendarDays size={14} className="text-text-muted" />
-            {format(new Date(), 'dd MMMM yyyy')}
+          <div className="flex items-center gap-2">
+            <input 
+              type="date" 
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              className="px-3 py-1.5 bg-surface border border-border rounded-lg text-[12px] font-bold text-text-secondary focus:outline-none focus:border-primary"
+            />
+            <span className="text-text-muted text-[12px] font-medium">to</span>
+            <input 
+              type="date" 
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              className="px-3 py-1.5 bg-surface border border-border rounded-lg text-[12px] font-bold text-text-secondary focus:outline-none focus:border-primary"
+            />
           </div>
-          <Button variant="primary" className="text-[11px] h-8 px-4 font-bold tracking-wider uppercase">SYNC PMS</Button>
+          {(fromDate || toDate) && (
+            <Button variant="ghost" size="sm" onClick={() => { setFromDate(''); setToDate(''); }} className="text-[11px] h-8 text-semantic-danger font-bold uppercase">
+              Clear
+            </Button>
+          )}
         </div>
       }
     >
@@ -162,26 +213,26 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <KPICard 
             title="Total Revenue" 
-            value={`${revenue.currency}${revenue.total.toLocaleString()}`} 
-            subtext={`${revenue.completedBookings} completed bookings`}
+            value={`₹${data.revenue.total.toLocaleString('en-IN')}`} 
+            subtext={`${data.revenue.completed_bookings} completed bookings`}
             icon={IndianRupee} colorClass="text-emerald-500" iconBgClass="bg-emerald-500"
           />
           <KPICard 
             title="Occupancy Rate" 
-            value={`${occupancy.rate}%`} 
-            subtext={`${occupancy.occupiedRooms} of ${occupancy.totalRooms} rooms occupied`}
+            value={`${occupancyRate}%`} 
+            subtext={`${data.rooms.occupied} of ${data.rooms.total} rooms occupied`}
             icon={BedDouble} colorClass="text-primary" iconBgClass="bg-primary"
           />
           <KPICard 
             title="Today's Bookings" 
-            value={todaysBookings.total} 
-            subtext={`${todaysBookings.confirmed} confirmed • ${todaysBookings.pending} pending`}
+            value={data.today_bookings.total} 
+            subtext={`${data.today_bookings.confirmed} confirmed • ${data.today_bookings.pending} pending`}
             icon={CalendarDays} colorClass="text-brand-dark" iconBgClass="bg-brand-dark"
           />
           <KPICard 
             title="Available Rooms" 
-            value={availableRooms.count} 
-            subtext={availableRooms.statusText}
+            value={data.rooms.available} 
+            subtext={data.rooms.available > 0 ? 'Ready for check-in' : 'Fully booked'}
             icon={Key} colorClass="text-blue-500" iconBgClass="bg-blue-500"
           />
         </div>
@@ -206,19 +257,19 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 gap-3 mt-2 flex-1">
                 <div className="p-4 rounded-xl border border-border bg-surface-muted/50 flex flex-col justify-center">
                    <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.1em] mb-1">Available</p>
-                   <p className="text-2xl font-black text-blue-600">{roomStatus.available}</p>
+                   <p className="text-2xl font-black text-blue-600">{data.rooms.available}</p>
                 </div>
                 <div className="p-4 rounded-xl border border-border bg-surface-muted/50 flex flex-col justify-center">
                    <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.1em] mb-1">Occupied</p>
-                   <p className="text-2xl font-black text-primary">{roomStatus.occupied}</p>
+                   <p className="text-2xl font-black text-primary">{data.rooms.occupied}</p>
                 </div>
                 <div className="p-4 rounded-xl border border-border bg-surface-muted/50 flex flex-col justify-center">
                    <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.1em] mb-1">Maintenance</p>
-                   <p className="text-2xl font-black text-semantic-danger">{roomStatus.maintenance}</p>
+                   <p className="text-2xl font-black text-semantic-danger">{data.rooms.maintenance}</p>
                 </div>
                 <div className="p-4 rounded-xl border border-border bg-surface-muted/50 flex flex-col justify-center">
                    <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.1em] mb-1">Total Rooms</p>
-                   <p className="text-2xl font-black text-text">{roomStatus.total}</p>
+                   <p className="text-2xl font-black text-text">{data.rooms.total}</p>
                 </div>
               </div>
             </Card>
@@ -239,7 +290,7 @@ export default function Dashboard() {
                   <p className="text-[11px] text-text-muted font-medium">Expected check-ins</p>
                 </div>
                 <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
-                  <span className="text-[16px] font-black text-blue-600">{movements.arrivals}</span>
+                  <span className="text-[16px] font-black text-blue-600">{data.movements.arrivals}</span>
                 </div>
               </div>
               <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-surface-muted/30">
@@ -248,7 +299,7 @@ export default function Dashboard() {
                   <p className="text-[11px] text-text-muted font-medium">Expected check-outs</p>
                 </div>
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-[16px] font-black text-primary">{movements.departures}</span>
+                  <span className="text-[16px] font-black text-primary">{data.movements.departures}</span>
                 </div>
               </div>
             </div>
@@ -261,11 +312,11 @@ export default function Dashboard() {
             />
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-2">
               {[
-                { label: 'Pending Approval', count: reservationOverview.pending, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
-                { label: 'Confirmed', count: reservationOverview.confirmed, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
-                { label: 'Checked In', count: reservationOverview.checkedIn, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
-                { label: 'Checked Out', count: reservationOverview.checkedOut, color: 'text-slate-500', bg: 'bg-slate-500/10', border: 'border-slate-500/20' },
-                { label: 'Cancelled', count: reservationOverview.cancelled, color: 'text-rose-500', bg: 'bg-rose-500/10', border: 'border-rose-500/20' }
+                { label: 'Pending Approval', count: data.reservations.pending, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
+                { label: 'Confirmed', count: data.reservations.confirmed, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+                { label: 'Checked In', count: data.reservations.checked_in, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
+                { label: 'Checked Out', count: data.reservations.checked_out, color: 'text-slate-500', bg: 'bg-slate-500/10', border: 'border-slate-500/20' },
+                { label: 'Cancelled', count: data.reservations.cancelled, color: 'text-rose-500', bg: 'bg-rose-500/10', border: 'border-rose-500/20' }
               ].map((item, i) => (
                 <div key={i} className={`flex flex-col p-3 rounded-xl border ${item.border} ${item.bg}`}>
                   <p className="text-[11px] font-bold text-text-secondary truncate">{item.label}</p>
@@ -283,12 +334,12 @@ export default function Dashboard() {
               title="Room Type Occupancy" sub="Occupancy breakdown by category"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 mt-4">
-            {roomTypeOccupancy.map((room, i) => {
+            {data.room_type_occupancy.map((room, i) => {
               const pct = room.total > 0 ? (room.occupied / room.total) * 100 : 0;
               return (
                 <div key={i} className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[12px] font-bold text-text">{room.type}</span>
+                    <span className="text-[12px] font-bold text-text">{room.room_type}</span>
                     <div className="text-right">
                       <span className="text-[11px] font-bold text-text-secondary">{room.occupied} / {room.total}</span>
                       <span className="text-[10px] font-bold text-text-muted ml-2">{Math.round(pct)}%</span>
@@ -324,19 +375,19 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {recentReservations.map((res, i) => (
+                {data.recent_reservations.map((res, i) => (
                   <tr key={i} className="hover:bg-surface-muted/30 transition-colors group">
-                    <td className="px-3 py-3.5 text-[11px] font-black text-text-muted uppercase tracking-wider">{res.id}</td>
+                    <td className="px-3 py-3.5 text-[11px] font-black text-text-muted uppercase tracking-wider">{res.booking_id}</td>
                     <td className="px-3 py-3.5 text-[12px] font-bold text-text">{res.guest}</td>
                     <td className="px-3 py-3.5 text-[12px] font-semibold text-text-secondary">{res.room}</td>
-                    <td className="px-3 py-3.5 text-[11px] font-semibold text-text-muted">{res.checkIn}</td>
-                    <td className="px-3 py-3.5 text-[11px] font-semibold text-text-muted">{res.checkOut}</td>
-                    <td className="px-3 py-3.5 text-[11px] font-semibold text-text-muted">{res.guests}</td>
+                    <td className="px-3 py-3.5 text-[11px] font-semibold text-text-muted">{res.check_in}</td>
+                    <td className="px-3 py-3.5 text-[11px] font-semibold text-text-muted">{res.check_out}</td>
+                    <td className="px-3 py-3.5 text-[11px] font-semibold text-text-muted">{res.guests} Guests</td>
                     <td className="px-3 py-3.5">
                       {getStatusBadge(res.status)}
                     </td>
                     <td className="px-3 py-3.5 text-right">
-                      <span className="font-black text-[13px] text-text tabular-nums">₹{res.amount.toLocaleString()}</span>
+                      <span className="font-black text-[13px] text-text tabular-nums">₹{res.amount.toLocaleString('en-IN')}</span>
                     </td>
                   </tr>
                 ))}

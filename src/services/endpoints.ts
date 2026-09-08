@@ -19,6 +19,9 @@ export const ENDPOINTS = {
     UPDATE_STATUS: '/admin/banner/bannerupdatestatus',
     DELETE: '/admin/banner/bannerdelete',
   },
+  DASHBOARD: {
+    GET_STATS: '/admin/dashboard/dashboardstatsget',
+  },
   UPLOAD: {
     IMAGE: '/upload/image',
   },
