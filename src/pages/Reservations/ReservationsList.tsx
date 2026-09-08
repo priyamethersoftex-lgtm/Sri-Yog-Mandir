@@ -94,6 +94,17 @@ export default function ReservationsList() {
     }
   };
 
+  const getPaymentStatusColor = (status: string | null) => {
+    if (!status) return 'danger';
+    switch (status.toUpperCase()) {
+      case 'PAID': return 'success';
+      case 'UNPAID': return 'danger';
+      case 'REFUND':
+      case 'REFUNDED': return 'default';
+      default: return 'default';
+    }
+  };
+
   if (isLoading && reservations.length === 0) return <LoadingState />;
 
   return (
@@ -179,7 +190,7 @@ export default function ReservationsList() {
               },
               {
                 header: 'PAYMENT',
-                cell: (r) => <Badge variant={getStatusColor(r.payment_status) as any}>{r.payment_status || 'Unpaid'}</Badge>
+                cell: (r) => <Badge variant={getPaymentStatusColor(r.payment_status) as any}>{r.payment_status || 'UNPAID'}</Badge>
               },
               {
                 header: 'STATUS',
