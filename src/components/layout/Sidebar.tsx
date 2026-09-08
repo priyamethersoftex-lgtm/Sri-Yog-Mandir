@@ -32,11 +32,11 @@ const NAV_ITEMS = [
       { label: "Bed Types", to: "/rooms/beds" },
     ],
   },
-  {
-    label: "Gallery",
-    to: "/gallery",
-    icon: <ImageIcon size={17} />,
-  },
+  // {
+  //   label: "Gallery",
+  //   to: "/gallery",
+  //   icon: <ImageIcon size={17} />,
+  // },
   {
     label: "Banners",
     to: "/banners",
