@@ -101,7 +101,7 @@ const TrendChart = ({ data }: any) => {
             contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', padding: '8px 12px' }}
             itemStyle={{ fontSize: '13px', fontWeight: 700 }}
             labelStyle={{ fontSize: '12px', color: '#6b7280', fontWeight: 600, marginBottom: '4px' }}
-            formatter={(value: any, name: string) => [name === 'Revenue' ? `₹${value}` : value, name]}
+            formatter={(value: any, name: any) => [name === 'Revenue' ? `₹${value}` : value, name]}
           />
           <Legend 
             wrapperStyle={{ fontSize: '12px', fontWeight: 600, paddingTop: '10px' }}
