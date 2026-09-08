@@ -136,5 +136,23 @@ export const reservationService = {
       }
       throw error;
     }
+  },
+
+  updatePaymentStatus: async (id: number, payment_status: string): Promise<any> => {
+    try {
+      const response: any = await axiosInstance.put(ENDPOINTS.RESERVATION.UPDATE_PAYMENT, {
+        id,
+        payment_status
+      });
+      if (response.Success) {
+        return response;
+      }
+      throw new Error(response.Message || 'Failed to update payment status');
+    } catch (error: any) {
+      if (error.response?.data?.Message) {
+        throw new Error(error.response.data.Message);
+      }
+      throw error;
+    }
   }
 };

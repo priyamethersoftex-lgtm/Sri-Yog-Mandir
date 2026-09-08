@@ -58,20 +58,30 @@ export default function ReservationsList() {
   const fetchReservations = async () => {
     setIsLoading(true);
     try {
-      const statusParam = activeTab === 'All' ? null : activeTab;
       const data = await reservationService.getReservations({
         page,
         limit: pageSize,
-        reservation_status: statusParam
+        reservation_status: activeTab === 'All' ? null : activeTab
       });
-      setReservations(data.list);
-      setTotalRecords(data.pagination.total);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to load reservations');
+      setReservations(data.list || []);
+      setTotalRecords(data.pagination?.total || 0);
+    } catch (err: any) {
+      toast.error('Failed to load reservations');
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handlePaymentUpdate = async (id: number, payment_status: string) => {
+    try {
+      await reservationService.updatePaymentStatus(id, payment_status);
+      toast.success(`Payment status updated to ${payment_status}`);
+      fetchReservations();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update payment status');
+    }
+  };
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -157,7 +167,7 @@ export default function ReservationsList() {
               {
                 header: 'DATES',
                 cell: (r) => (
-                  <div className="text-[13px] font-bold text-text flex flex-col gap-1">
+                  <div className="text-[13px] font-bold text-text flex flex-col gap-1 whitespace-nowrap">
                     <span className="flex items-center gap-1.5"><span className="text-[11px] opacity-70">In:</span> {format(parseISO(r.check_in), 'dd MMM yyyy')}</span>
                     <span className="flex items-center gap-1.5"><span className="text-[11px] opacity-70">Out:</span> {format(parseISO(r.check_out), 'dd MMM yyyy')}</span>
                   </div>
@@ -169,7 +179,7 @@ export default function ReservationsList() {
               },
               {
                 header: 'PAYMENT',
-                cell: (r) => <Badge variant={getStatusColor(r.payment_status) as any}>{r.payment_status}</Badge>
+                cell: (r) => <Badge variant={getStatusColor(r.payment_status) as any}>{r.payment_status || 'Unpaid'}</Badge>
               },
               {
                 header: 'STATUS',
